@@ -1,0 +1,890 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOPros Operator Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#0A1526;--bg2:#0E1F38;--accent:#2563EB;--accent-soft:rgba(37,99,235,0.13);--glass:rgba(30,58,95,0.22);--line:rgba(148,176,214,0.16);--ink:#EAF1FB;--dim:#9DB0CC;--faint:#5E718F;--ease:cubic-bezier(0.16,1,0.3,1);}
+body{background:var(--bg);font-family:'Inter',-apple-system,sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+.role-bar{position:fixed;top:0;left:0;right:0;height:52px;z-index:50;background:rgba(10,21,38,0.90);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:4px;padding:0 12px;}
+.brand{display:flex;align-items:center;gap:8px;margin-right:12px;flex-shrink:0;}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563EB,#1E3A5F);display:flex;align-items:center;justify-content:center;border:1px solid rgba(148,176,214,0.25);}
+.brand-mark svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.brand-name{font-size:13px;font-weight:800;color:#fff;letter-spacing:-0.01em;}
+.div{width:1px;height:18px;background:var(--line);margin:0 6px;}
+.rtab{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .18s var(--ease);border:1px solid transparent;color:var(--dim);background:none;white-space:nowrap;}
+.rtab:hover{color:var(--ink);background:var(--glass);}
+.rtab.active{color:#fff;background:var(--glass);border-color:var(--line);}
+.rtab .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sidebar{position:fixed;top:52px;left:0;bottom:0;width:220px;background:var(--bg2);border-right:1px solid var(--line);overflow-y:auto;padding:12px 8px;z-index:40;}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+.section-label{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--faint);padding:10px 8px 6px;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;color:var(--dim);transition:all .15s;border:none;background:none;width:100%;text-align:left;}
+.nav-item:hover{color:var(--ink);background:var(--accent-soft);}
+.nav-item.active{color:var(--ink);background:var(--accent-soft);font-weight:600;}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:0.7;}
+.main{margin-left:220px;padding-top:52px;min-height:100vh;}
+.content{padding:32px 36px 80px;max-width:820px;}
+.page-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:10px;}
+.page-title{font-size:28px;font-weight:800;letter-spacing:-0.02em;margin-bottom:12px;}
+.page-desc{font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:24px;max-width:620px;}
+.howto-grid{display:flex;flex-direction:column;gap:10px;}
+.howto-card{display:flex;align-items:center;gap:14px;background:rgba(14,31,56,0.6);border:1px solid var(--line);border-radius:12px;padding:14px 18px;cursor:pointer;transition:all .18s var(--ease);}
+.howto-card:hover{border-color:rgba(37,99,235,0.4);background:rgba(37,99,235,0.06);transform:translateX(2px);}
+.howto-card .num{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0;}
+.howto-card .label{font-size:14px;font-weight:600;flex:1;color:var(--ink);}
+.howto-card .chev{color:var(--faint);flex-shrink:0;}
+.howto-card .chev svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.overlay{display:none;position:fixed;inset:0;z-index:70;background:rgba(0,0,0,0.45);}
+.overlay.show{display:block;}
+.step-panel{position:fixed;top:0;right:0;bottom:0;width:500px;max-width:100vw;z-index:80;background:var(--bg2);border-left:1px solid var(--line);transform:translateX(100%);transition:transform .35s var(--ease);display:flex;flex-direction:column;overflow:hidden;}
+@media (min-width:1200px){.step-panel{width:min(72vw,1100px);}.step-panel-body{padding:30px 36px;}.step-panel-head{padding:24px 36px 18px;}.step-panel-title{font-size:20px;}}
+@media (max-width:700px){.step-panel{width:100vw;}.step-panel-body{padding:20px;}.step-panel-head{padding:16px 18px 14px;}}
+.step-panel.open{transform:translateX(0);}
+.step-panel-head{padding:20px 24px 16px;border-bottom:1px solid var(--line);flex-shrink:0;display:flex;align-items:flex-start;gap:12px;}
+.step-panel-close{width:30px;height:30px;border-radius:8px;background:var(--glass);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:2px;}
+.step-panel-close svg{width:14px;height:14px;stroke:var(--dim);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.step-panel-info{flex:1;}
+.step-panel-kicker{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--faint);margin-bottom:6px;}
+.step-panel-title{font-size:17px;font-weight:700;line-height:1.3;color:var(--ink);}
+.step-panel-body{flex:1;overflow-y:auto;padding:24px;}
+.step-panel-body::-webkit-scrollbar{width:4px;}
+.step-panel-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+.step-item{display:flex;gap:14px;margin-bottom:20px;}
+.step-num{width:26px;height:26px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:var(--accent-soft);color:var(--accent);}
+.step-text{font-size:14px;line-height:1.65;color:var(--dim);padding-top:4px;}
+.note-box{background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.22);border-radius:10px;padding:12px 16px;margin-top:4px;font-size:13px;color:var(--dim);line-height:1.6;}
+.screen-shot{border-radius:10px;overflow:hidden;border:1px solid var(--line);}
+.screen-shot img{width:100%;display:block;}
+
+/* ── SLIDESHOW MODAL ─────────────────────────────── */
+.ss-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);}
+.ss-overlay.open{display:flex;align-items:center;justify-content:center;}
+.ss-modal{
+  width:min(960px,94vw);max-height:94vh;background:#0E1F38;
+  border:1px solid rgba(148,176,214,0.18);border-radius:14px;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6);
+}
+.ss-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:1px solid rgba(148,176,214,0.12);flex-shrink:0;
+}
+.ss-header-left{display:flex;flex-direction:column;gap:2px;}
+.ss-eyebrow{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5E718F;}
+.ss-title{font-size:15px;font-weight:700;color:#EAF1FB;}
+.ss-close{
+  width:30px;height:30px;border-radius:8px;background:rgba(30,58,95,0.4);
+  border:1px solid rgba(148,176,214,0.15);cursor:pointer;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;
+}
+.ss-close svg{width:14px;height:14px;stroke:#9DB0CC;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ss-body{display:flex;flex:1;min-height:0;overflow:hidden;}
+.ss-sidenav{width:210px;flex-shrink:0;border-right:1px solid rgba(148,176,214,0.12);padding:12px 8px;overflow-y:auto;}
+.ss-step-btn{
+  display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;
+  cursor:pointer;border:none;background:none;width:100%;text-align:left;margin-bottom:2px;transition:all .12s;
+}
+.ss-step-btn:hover{background:rgba(255,211,61,0.06);}
+.ss-step-btn.ss-active{background:rgba(255,211,61,0.10);}
+.ss-step-btn.ss-done{opacity:0.7;}
+.ss-snum{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;
+  background:rgba(255,211,61,0.12);color:#FFD33D;transition:all .12s;
+}
+.ss-step-btn.ss-active .ss-snum{background:#FFD33D;color:#0A1526;}
+.ss-step-btn.ss-done .ss-snum{background:#2DD4BF;color:#0A1526;}
+.ss-slabel{font-size:11px;font-weight:500;color:#9DB0CC;line-height:1.3;}
+.ss-step-btn.ss-active .ss-slabel{color:#EAF1FB;font-weight:600;}
+.ss-viewer{flex:1;display:flex;flex-direction:column;min-width:0;}
+.ss-imgwrap{flex:1;background:#050e1a;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;min-height:0;}
+.ss-img{max-width:100%;max-height:100%;object-fit:contain;transition:opacity .2s ease;}
+.ss-img.ss-fade{opacity:0;}
+.ss-badge{position:absolute;top:10px;left:10px;background:#FFD33D;color:#0A1526;font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:20px;pointer-events:none;}
+.ss-controls{padding:10px 16px;border-top:1px solid rgba(148,176,214,0.12);border-bottom:1px solid rgba(148,176,214,0.12);display:flex;align-items:center;gap:8px;flex-shrink:0;background:#0A1526;}
+.ss-cbtn{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(148,176,214,0.15);background:rgba(14,31,56,0.8);color:#9DB0CC;transition:all .13s;white-space:nowrap;}
+.ss-cbtn:hover:not(:disabled){color:#EAF1FB;border-color:rgba(148,176,214,0.35);}
+.ss-cbtn:disabled{opacity:0.3;cursor:not-allowed;}
+.ss-cbtn.ss-gold{background:#FFD33D;color:#0A1526;border-color:#FFD33D;}
+.ss-cbtn.ss-gold:hover{background:#ffe06b;}
+.ss-cbtn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.ss-prog{flex:1;height:3px;background:rgba(148,176,214,0.10);border-radius:3px;overflow:hidden;}
+.ss-progbar{height:100%;background:#FFD33D;border-radius:3px;transition:width .3s ease;}
+.ss-ctr{font-size:11px;font-weight:600;color:#5E718F;}
+.ss-dots{display:flex;gap:4px;}
+.ss-dot{width:6px;height:6px;border-radius:50%;background:rgba(148,176,214,0.2);cursor:pointer;border:none;transition:all .18s;}
+.ss-dot.ss-active{background:#FFD33D;transform:scale(1.3);}
+.ss-dot.ss-done{background:#2DD4BF;}
+.ss-desc{padding:12px 18px;flex-shrink:0;}
+.ss-dstep{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#FFD33D;margin-bottom:4px;}
+.ss-dtitle{font-size:14px;font-weight:700;color:#EAF1FB;margin-bottom:5px;}
+.ss-dtext{font-size:12px;color:#9DB0CC;line-height:1.65;max-width:580px;}
+
+/* Slideshow trigger button on howto cards */
+.ss-trigger{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;
+  background:rgba(255,211,61,0.12);color:#FFD33D;border:1px solid rgba(255,211,61,0.25);
+  cursor:pointer;margin-left:8px;flex-shrink:0;transition:all .15s;
+}
+.ss-trigger:hover{background:rgba(255,211,61,0.22);}
+.ss-trigger svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+.screen-shot-caption{padding:8px 14px;font-size:11px;color:var(--faint);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:rgba(14,31,56,0.6);}
+
+.walk-eye{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;color:#FFD33D;background:rgba(255,211,61,0.10);border:1px solid rgba(255,211,61,0.28);flex-shrink:0;}
+.walk-eye svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.walk-eye.muted{color:var(--faint);background:transparent;border-color:rgba(148,176,214,0.18);}
+
+.video-camera{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;color:#60A5FA;background:rgba(59,130,246,0.12);border:1px solid rgba(96,165,250,0.32);flex-shrink:0;}
+.video-camera svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nav-item .video-camera{margin-left:auto;width:20px;height:20px;border-radius:6px;}
+.nav-item .video-camera svg{width:12px;height:12px;}
+.section-media-icons{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+
+</style>
+</head>
+<body>
+<div class="role-bar">
+  <div class="brand">
+    <div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+    <span class="brand-name">SOPros</span>
+  </div>
+  <div class="div"></div>
+  <button class="rtab" data-role="shortcuts" onclick="switchRole('shortcuts')"><span class="dot" style="background:#22C55E"></span>Short Cuts</button>
+  <button class="rtab" data-role="owner" onclick="switchRole('owner')"><span class="dot" style="background:#2DD4BF"></span>Owner</button>
+  <button class="rtab active" data-role="admin" onclick="switchRole('admin')"><span class="dot" style="background:#A78BFA"></span>Admin</button>
+  <button class="rtab" data-role="manager" onclick="switchRole('manager')"><span class="dot" style="background:#3B82F6"></span>Manager</button>
+  <button class="rtab" data-role="lead" onclick="switchRole('lead')"><span class="dot" style="background:#F59E0B"></span>Lead</button>
+  <button class="rtab" data-role="employee" onclick="switchRole('employee')"><span class="dot" style="background:#34D399"></span>Employee</button>
+</div>
+<aside class="sidebar" id="sidebar"></aside>
+<main class="main"><div class="content" id="content"></div></main>
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<div class="step-panel" id="panel">
+  <div class="step-panel-head">
+    <div class="step-panel-close" onclick="closePanel()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    <div class="step-panel-info">
+      <div class="step-panel-kicker" id="panel-kicker"></div>
+      <div class="step-panel-title" id="panel-title"></div>
+    </div>
+  </div>
+  <div class="step-panel-body" id="panel-body"></div>
+</div>
+<script>
+const IMGS = {
+  'owner:Dashboard': 'assets/images/image_001_cf4c09a43b0204be.jpg',
+  'owner:Live Checklist': 'assets/images/image_002_743de2ab60ff3711.jpg',
+  'owner:Res. Checklist': 'assets/images/image_003_24c20cd854a3142e.jpg',
+  'owner:Prep & Order': 'assets/images/image_004_5b4e26b28b0c05e5.jpg',
+  'owner:Recipes': 'assets/images/image_005_3d9db02ae5c6f7e9.jpg',
+  'owner:Inventory Guide': 'assets/images/image_006_54fb87b003ed3b21.jpg',
+  'owner:Spoilage': 'assets/images/image_007_befa9580d3c03271.jpg',
+  'owner:Shift Notes': 'assets/images/image_008_2a8db031e44dd48f.jpg',
+  'owner:Rewards': 'assets/images/image_009_948ffb43d0b727e1.jpg',
+  'owner:Reports': 'assets/images/image_010_fc02aa942a6fd714.jpg',
+  'owner:Organization': 'assets/images/image_011_444d72d6c31750c9.jpg',
+  'admin:Dashboard': 'assets/images/image_001_cf4c09a43b0204be.jpg',
+  'admin:Live Checklist': 'assets/images/image_002_743de2ab60ff3711.jpg',
+  'admin:Planner': 'assets/images/image_012_f0d7329b915f5504.jpg',
+  'admin:Tasks': 'assets/images/image_013_c730cd99264fb4cc.jpg',
+  'admin:Prep & Order': 'assets/images/image_004_5b4e26b28b0c05e5.jpg',
+  'admin:Recipes': 'assets/images/image_005_3d9db02ae5c6f7e9.jpg',
+  'admin:Inventory Guide': 'assets/images/image_006_54fb87b003ed3b21.jpg',
+  'admin:Res. Checklist': 'assets/images/image_003_24c20cd854a3142e.jpg',
+  'admin:Spoilage': 'assets/images/image_007_befa9580d3c03271.jpg',
+  'admin:Shift Notes': 'assets/images/image_008_2a8db031e44dd48f.jpg',
+  'admin:Rewards': 'assets/images/image_009_948ffb43d0b727e1.jpg',
+  'admin:Organization': 'assets/images/image_010_fc02aa942a6fd714.jpg',
+  'admin:Invites': 'assets/images/image_011_444d72d6c31750c9.jpg',
+  'admin:Team': 'assets/images/image_014_1e82de7c2928ec1e.jpg',
+  'manager:Dashboard': 'assets/images/image_015_626dc1b00be802b8.jpg',
+  'manager:Live Checklist': 'assets/images/image_016_8b530c024effae93.jpg',
+  'manager:Planner': 'assets/images/image_017_77b76c27bb460ab0.jpg',
+  'manager:Tasks': 'assets/images/image_018_de3f828e87ce94db.jpg',
+  'manager:Prep & Order': 'assets/images/image_019_ea1737c5e179c4c3.jpg',
+  'manager:Recipes': 'assets/images/image_020_206de2b24a1c2dd5.jpg',
+  'manager:Inventory Guide': 'assets/images/image_021_906b52778d70d16e.jpg',
+  'manager:Spoilage': 'assets/images/image_022_98cf12df5f87a089.jpg',
+  'manager:Shift Notes': 'assets/images/image_023_df1c90fe5d950486.jpg',
+  'manager:Rewards': 'assets/images/image_024_36ad2ef9b4766ddf.jpg',
+  'manager:Reports': 'assets/images/image_025_a6a6258270e00d2c.jpg',
+  'manager:Organization': 'assets/images/image_026_a766eeaa3fefce03.jpg',
+  'manager:Invites': 'assets/images/image_027_c52c0b766d47282f.jpg',
+  'manager:Team': 'assets/images/image_028_9799775ace813dff.jpg',
+  'lead:Dashboard': 'assets/images/image_029_5498ba771ef66412.jpg',
+  'lead:My Checklists': 'assets/images/image_030_76da74b1de765727.jpg',
+  'lead:Live Checklist': 'assets/images/image_031_d7d84a1e6903e813.jpg',
+  'lead:Checklists': 'assets/images/image_032_64348967cc591b77.jpg',
+  'lead:Prep & Order': 'assets/images/image_033_f4344f24ded5cf8b.jpg',
+  'lead:Recipes': 'assets/images/image_034_92e2ea406c9f046c.jpg',
+  'lead:Spoilage': 'assets/images/image_035_b1541bf1fc3130b7.jpg',
+  'lead:Shift Notes': 'assets/images/image_036_b7cc5d5f354bf08b.jpg',
+  'lead:Rewards': 'assets/images/image_037_1cc9e76348295e68.jpg',
+  'employee:Dashboard': 'assets/images/image_038_1ac32b02eee5beb7.jpg',
+  'employee:Checklist': 'assets/images/image_039_f299b40eaa8dfbf1.jpg',
+  'employee:Prep Tasks': 'assets/images/image_040_93286e8171834aa0.jpg',
+  'employee:Recipes': 'assets/images/image_041_f8681cd2b374e872.jpg',
+  'employee:Spoilage': 'assets/images/image_042_308863d1c633f4bb.jpg',
+  'employee:Shift Notes': 'assets/images/image_043_7f2d2740bdbfd3dc.jpg',
+  'employee:Rewards': 'assets/images/image_044_ed400648104f094c.jpg',
+};
+
+const HOWTO_SLIDES = {
+  "admin:Planner:Assign a Checklist to a Shift": [{"step": "Step 1", "title": "Navigate to the Planner tab", "desc": "Open the Planner tab from the top navigation.", "img": "assets/images/image_045_28103f04540907c4.jpg"}, {"step": "Step 2", "title": "Select the shift", "desc": "Select the shift you want to assign a checklist to.", "img": "assets/images/image_046_158f0e31bbdc58c5.jpg"}, {"step": "Step 3", "title": "Open the Add Checklist drop-down", "desc": "Click the Add Checklist drop-down inside the selected shift.", "img": "assets/images/image_047_843f0f199be257f5.jpg"}, {"step": "Step 4", "title": "Select the desired checklist", "desc": "Choose the checklist you want to add to the shift.", "img": "assets/images/image_048_1ddf21fd43d5464a.jpg"}, {"step": "Step 5", "title": "Click Add Checklist", "desc": "Click the Add Checklist button to attach the checklist to the shift.", "img": "assets/images/image_049_73340e076fcd50ab.jpg"}, {"step": "Step 6", "title": "Checklist assigned to shift", "desc": "The checklist is now assigned to the selected shift.", "img": "assets/images/image_050_b7bd76cfb763bf1e.jpg"}],
+  "admin:Dashboard:Add a Location": [
+    { step: "Step 1", title: "Navigate to the Dashboard Tab", desc: "Click the Dashboard tab to begin adding a new location.", img: "assets/images/image_051_ad30d2d129719d72.jpg" },
+    { step: "Step 2", title: "Click Add Location", desc: "Click the Add Location button to open the location form.", img: "assets/images/image_052_b99fc5d54d219cf5.jpg" },
+    { step: "Step 3", title: "Complete Required Information", desc: "Fill in the required location information in the form fields.", img: "assets/images/image_053_77e795f428a08c23.jpg" },
+    { step: "Step 4", title: "Review the Information", desc: "Check the location details for accuracy before submitting.", img: "assets/images/image_054_9a5e4390876f9e81.jpg" },
+    { step: "Step 5", title: "Create Location", desc: "Click the Create Location button to save the new location.", img: "assets/images/image_055_82771945ba7b16d1.jpg" },
+    { step: "Step 6", title: "Location Added", desc: "The new location is now added to your organization.", img: "assets/images/image_056_d0ed268dbbb73bd6.jpg" }
+  ],
+  "owner:Dashboard:Add a Location": [
+{ step: "Step 1", title: "Navigate to the Dashboard Tab", desc: "Click the Dashboard tab in the top navigation bar. This is your starting point for all organization-level management.", img: "assets/images/image_057_0fd3fd63f8d7026a.jpg" },
+  { step: "Step 2", title: "Click View Venue in Linked Venues", desc: "Scroll down on the Dashboard to the Linked Venues section. Click the 'View Venue >' link beneath your venue (e.g. Slideswater Park) to open the venue page where you can add locations.", img: "assets/images/image_058_19a8a45db8c9b316.jpg" },
+  { step: "Step 3", title: "Complete the Location Form", desc: "The Add Location modal will appear. Enter the Location Name, Kind (service type such as Full Service), and confirm the Status is set to Active.", img: "assets/images/image_059_dd20958b2264c578.jpg" },
+  { step: "Step 4", title: "Review All Fields for Accuracy", desc: "Confirm all three fields are correct — Location Name, Kind, and Status — before submitting. Double-check spelling and service type.", img: "assets/images/image_060_69306be7832dd394.jpg" },
+  { step: "Step 5", title: "Click Create Location", desc: "Once the form is complete and reviewed, click the gold '+ Create Location' button at the bottom right of the modal to save the new location.", img: "assets/images/image_061_2f52205ef3d7988b.jpg" },
+  { step: "Step 6", title: "Location Successfully Added", desc: "You'll see a green 'Location added.' confirmation banner at the top. The new location (e.g. Grill House) will now appear in the Locations list with Active status.", img: "assets/images/image_062_3a911c0e85867b31.jpg" },
+  ],
+  "owner:Planner:Add an Organization": [
+    { step: "Step 1", title: "Navigate to the Organization Tab", desc: "Open the Organization tab from the top navigation bar.", img: "assets/images/image_063_3cdc683c8d6c48d3.jpg" },
+    { step: "Step 2", title: "Enter Organization Name", desc: "Complete the Organization Name field.", img: "assets/images/image_064_e0c58659db4e7468.jpg" },
+    { step: "Step 3", title: "Select Default Time Zone", desc: "Choose the correct Default Time Zone from the drop-down.", img: "assets/images/image_065_0345936317b77bf4.jpg" },
+    { step: "Step 4", title: "Upload Organization Logo", desc: "Upload the Organization Logo in the logo upload area.", img: "assets/images/image_066_d0f6f649af2aeb3c.jpg" },
+    { step: "Step 5", title: "Click Save Organization", desc: "Click the Save Organization button at the bottom of the form.", img: "assets/images/image_067_7cd7f6c4e4fa6b77.jpg" },
+    { step: "Step 6", title: "Confirm Organization Saved", desc: "The success message confirms the organization has been saved.", img: "assets/images/image_068_474e2ee4ddb98566.jpg" }
+  ],
+  "admin:Dashboard:Add a Venue": [{"step":"Step 1","title":"Navigate to the Dashboard Tab","desc":"Click the Dashboard tab to begin adding a new venue.","img":"assets/images/image_069_ab9ef7fc7cc61bab.jpg"},{"step":"Step 2","title":"Click Add Venue","desc":"Click the Add Venue button near the upper-right side of the dashboard.","img":"assets/images/image_070_83e8acdba26503c9.jpg"},{"step":"Step 3","title":"Complete the Venue Form","desc":"Enter the required venue details in the Add Venue form.","img":"assets/images/image_071_8a68c0dabf51c661.jpg"},{"step":"Step 4","title":"Review the Information","desc":"Review the venue name, venue type, timezone, address, city, and state for accuracy.","img":"assets/images/image_072_b115e774c737beef.jpg"},{"step":"Step 5","title":"Create Venue","desc":"Click the Create Venue button to save the new venue.","img":"assets/images/image_073_93d4c9c915d90898.jpg"},{"step":"Step 6","title":"Venue Added","desc":"The new venue is created and linked to your organization.","img":"assets/images/image_074_bddbd22422df83f1.jpg"}],
+  "admin:Dashboard:Export Dashboard Data": [{"step":"Step 1","title":"Navigate to the Dashboard Tab","desc":"Open the Dashboard tab before exporting dashboard data.","img":"assets/images/image_075_315004f5a847b6e6.jpg"},{"step":"Step 2","title":"Click Export","desc":"Click the Export button near the top-right of the dashboard.","img":"assets/images/image_076_0869ea1ae60f6bd1.jpg"},{"step":"Step 3","title":"Download Starts Automatically","desc":"After selecting Export, the dashboard data will automatically download to your device.","img":"assets/images/image_077_5a2cfeed99016cd9.jpg"}],
+  "admin:Dashboard:View Organization Employees": [{"step":"Step 1","title":"Navigate to the Dashboard Tab","desc":"Open the Dashboard tab to access organization employee information.","img":"assets/images/image_078_8bac9d2c6a6b0bd5.jpg"},{"step":"Step 2","title":"Find Organization Employees","desc":"Scroll down to the Organization Employees section on the dashboard.","img":"assets/images/image_079_770ea6ae9986e4d2.jpg"},{"step":"Step 3","title":"Open Employee Directory","desc":"Click the Open Employee Directory button.","img":"assets/images/image_080_ecce5f620aca4cdb.jpg"},{"step":"Step 4","title":"Review Employee Summary","desc":"The directory shows Total Members, Active Members, Owners, Admins, Managers, and Employees.","img":"assets/images/image_081_599c9020bf26ccc7.jpg"},{"step":"Step 5","title":"Use Employee Filters","desc":"Use the filters to search by name, email address, location, role, or status.","img":"assets/images/image_082_68d76ef75ca682c1.jpg"}],
+
+  "admin:Planner:Submit a Checklist to a Role": [
+    {"step":"Step 1","title":"Navigate to the Planner tab","desc":"Open the Planner tab from the top navigation.","img":"assets/images/image_108_submit_role.jpg"},
+    {"step":"Step 2","title":"Select the shift","desc":"Select the shift you want to assign a checklist to.","img":"assets/images/image_109_submit_role.jpg"},
+    {"step":"Step 3","title":"Open Add Checklist","desc":"Click the Add Checklist drop-down.","img":"assets/images/image_110_submit_role.jpg"},
+    {"step":"Step 4","title":"Select the checklist","desc":"Choose the desired checklist.","img":"assets/images/image_111_submit_role.jpg"},
+    {"step":"Step 5","title":"Add the checklist","desc":"Click the Add Checklist button.","img":"assets/images/image_112_submit_role.jpg"},
+    {"step":"Step 6","title":"Click Role","desc":"Click the Role button for the checklist.","img":"assets/images/image_113_submit_role.jpg"},
+    {"step":"Step 7","title":"Select the role","desc":"Choose the role that should receive the checklist.","img":"assets/images/image_114_submit_role.jpg"},
+    {"step":"Step 8","title":"Submit the shift","desc":"Click Submit Shift in the upper-right corner.","img":"assets/images/image_115_submit_role.jpg"},
+    {"step":"Step 9","title":"Checklist assigned to role","desc":"The checklist is now assigned to the selected role for the shift.","img":"assets/images/image_116_submit_role.jpg"}
+  ],
+
+  "admin:Planner:Create a Shift": [{"step": "Step 1", "title": "Navigate to the Planner tab", "desc": "Open the Planner tab from the top navigation.", "img": "assets/images/image_083_2ba97a4e75f00c04.jpg"}, {"step": "Step 2", "title": "Select the desired date", "desc": "Choose the date you want to create the shift for at the top of the page.", "img": "assets/images/image_084_41a62c9cea18328f.jpg"}, {"step": "Step 3", "title": "Find the Restaurant Shift Library", "desc": "Scroll down to the Restaurant Shift Library section on the right side of the Planner page.", "img": "assets/images/image_085_5932c664175c546a.jpg"}, {"step": "Step 4", "title": "Enter the shift details", "desc": "Enter the Shift Name, Opening Time, and Closing Time.", "img": "assets/images/image_086_8db0a246fd26c12f.jpg"}, {"step": "Step 5", "title": "Click Save Shift", "desc": "Click the Save Shift button to create the shift.", "img": "assets/images/image_087_b9984730bb46ddc3.jpg"}, {"step": "Step 6", "title": "Confirm the new shift appears", "desc": "The new shift now appears on the Planner page.", "img": "assets/images/image_088_4416755abacba4c2.jpg"}],
+
+  "shortcuts:Linking Menu Items:Add Inventory Items for a Menu Item": [{"step":"Step 1","title":"Click Inventory Guide","desc":"From the top navigation bar, click the Inventory Guide tab to open the vendor inventory sheets page.","img":"assets/images/image_089_d2df882b02ecb9fa.jpg"},{"step":"Step 2","title":"Click Add Item","desc":"On the Vendor Inventory Sheets page, click the Add Item button. This opens the Add Inventory Item form.","img":"assets/images/image_090_70d5077932f64a00.jpg"},{"step":"Step 3","title":"Complete item details","desc":"Fill in the inventory item information: Sheet, Zone, Vendor, Item Name, Sheet Label, Item Code, Item Price, Item Quantity, Item Unit, Purchase Unit, Par, Category, and Brand.","img":"assets/images/image_091_c5b51fe194e9beeb.jpg"},{"step":"Step 4","title":"Save the item","desc":"After the required fields are completed, click Add Item at the bottom of the form to save the new vendor-linked inventory item.","img":"assets/images/image_092_cdde2f9aa432ad6a.jpg"},{"step":"Step 5","title":"Confirm the item was added","desc":"Scroll to the Inventory Items table and confirm the new item appears with the correct zone, vendor, item name, quantity, unit, cost, and unit mapping.","img":"assets/images/image_093_bcb49b96cb382c65.jpg"}],
+};
+
+const SECTION_DESCS = {
+  'owner:Dashboard': 'The main hub providing a bird\'s-eye view of the entire organization. Displays KPI cards (active locations, total employees, active venues, inactive locations), location performance panel, manager overview, SOP compliance tracker, location exceptions panel, and linked venues.',
+  'owner:Live Checklist': 'A real-time task tracking screen where owners can monitor employee checklist completion across all locations throughout the day.',
+  'owner:Res. Checklist': 'A template library displaying all available operational checklists in a color-coded card grid — covering food prep, safety, opening/closing procedures, financial tasks, and documentation.',
+  'owner:Prep & Order': 'An AI-powered forecasting tool that generates daily prep lists based on submitted forecasts. Shows ingredients needing preparation with details like estimated prep time, on-hand quantity, forecasted need, and amount to prep.',
+  'owner:Recipes': 'A visual recipe management module where owners can browse and manage all standardized recipes following Gold Standard procedures. Recipes are displayed as a photo-based card grid, filterable by All, Prep Items, Menu Items, and Base Recipes.',
+  'owner:Inventory Guide': 'A structured inventory management page tracking imported order items from vendors. Organized into Vendors, Inventory Zones, and an Inventory Items table mapping each ingredient to its vendor, item code, quantity, unit, cost, and recipe conversion.',
+  'owner:Spoilage': 'A food waste tracking module for logging spoiled ingredients with item type, brand, reason, tags, quantity, and photo proof. Summary cards track total entries, quantity lost, estimated cost, and unique items. Supports filtering and CSV export.',
+  'owner:Shift Notes': 'A team communication feed where managers can post and track shift-related messages. Notes are tagged Urgent, Event, Manager Update, Shift Update, or General — each with a comment thread, author, timestamp, location, and target audience.',
+  'owner:Rewards': 'A gamification module motivating staff through a points-based achievement system. Tracks total gold stars, current streak, weekly and daily earnings, and location rank. Includes a Leaderboard and Recent Activity feed.',
+  'owner:Reports': 'The reporting hub for organizational data and analytics. This page is currently under construction and will surface operational reports across all locations.',
+  'employee:Dashboard': 'The employee\'s personal home screen showing current tasks and rewards at a glance. Four KPI cards track Checklist Progress, Active Checklists, Prep Tasks (0/0 completed), and total Gold Stars earned (70). Below, two panels show Current Checklists and Prep Tasks, with quick Open buttons to jump directly to active work. The Rewards Status panel on the right displays Current Balance, Current Streak, This Week\'s earnings, and overall Rank — with a View Rewards button for the full leaderboard. An Up Next section highlights what needs attention next.',
+  'employee:Checklist': 'A personal checklist view showing only the checklist runs assigned to the logged-in employee for the current shift. Filterable by shift type (All Shifts, Opening, Closing, etc.). Currently in an empty state as no checklist runs have been assigned for today.',
+  'employee:Prep Tasks': 'The employee\'s assigned prep task list for the selected date. Shows Tasks Completed, Completion Rate, and Estimated Time Remaining at the top. A date selector lets the employee view tasks for different days, and filters allow narrowing by Location and Technique. Currently empty as no prep tasks are active for the selected day.',
+  'employee:Recipes': 'A read-only recipe library showing all recipes assigned to the employee\'s location. Cards display recipe photos and names. Employees can search by name or filter by Prep Items, Menu Items, or Base Recipes to reference Gold Standard procedures during prep work. No create or edit controls are visible — this is a reference-only view.',
+  'employee:Spoilage': 'A streamlined spoilage entry form where employees log spoiled items with type, brand, reason, tags, quantity, and optional photo proof. The submit button reads "Submit to Manager," sending the entry up the chain for review rather than recording it directly to the spoilage log. No summary metrics or filtering tools are visible at this access level.',
+  'employee:Shift Notes': 'The shift communication feed showing all manager-posted notes for the employee\'s assigned location. Notes are filterable by tag: Urgent, Event, Manager Update, Shift Update, and General. Author labels show role context (e.g., "Manager Slide (Admin)" or "Slides Owner (Owner)"). Employees can view comment threads and post their own notes via the New Note button.',
+  'employee:Rewards': 'The full rewards view with live data. This employee (Emp Slide) has 70 total gold stars, a 3-day current streak (best: 3), ranks #1 at this location, and earned +0 this week. The Streak Leaderboard shows their active streak. The Leaderboard confirms their all-time ranking with 70 stars. The Recent Activity feed shows a history of task-completed star awards, each earning +1 star.',
+  'lead:Dashboard': 'A simplified welcome screen with three quick-access cards: Checklists, Inventory, and Recipes. No KPI metrics or location performance data — just a clean entry point to the lead\'s core daily responsibilities.',
+  'lead:My Checklists': 'A personal task view showing only the checklists assigned to the currently logged-in lead, filterable by shift. Currently empty as no checklist runs have been assigned for the day.',
+  'lead:Live Checklist': 'Same real-time checklist tracking view as other roles, currently in an empty state. Leads can observe overall checklist progress but cannot create or manage templates.',
+  'lead:Checklists': 'The checklist template library is explicitly marked as read-only for leads. They can browse available templates but cannot create, edit, or assign them.',
+  'lead:Prep & Order': 'A simplified version of the prep and order module showing only Prep List and Inventory Count tabs — no Forecast or Order Guide access.',
+  'lead:Recipes': 'The same visual recipe card grid, but each card now displays both a recipe type badge (Prep Item or Menu Item) and an ingredient count. No create or import buttons — read-only access.',
+  'lead:Spoilage': 'A streamlined spoilage module — leads log spoiled items with the entry form (type, item, brand, reason, tags, quantity, photo), but the submit button reads "Submit to Manager," indicating entries flow upward for review.',
+  'lead:Shift Notes': 'The shift notes feed with a New Note button — leads can post their own notes. Author names show role labels (e.g. "Manager Slide (Admin)") giving leads visibility into who posted each message.',
+  'lead:Rewards': 'The rewards page includes a unique Award Gold Stars panel — leads can select a team member, choose a star amount, and add a recognition message. The Streak Leaderboard and all-time Leaderboard are also visible with live data.',
+  'manager:Dashboard': 'The same multi-location dashboard layout, with the manager granted Admin-level access. Shows KPI cards, the full locations list, linked venues, employee directory shortcut, and an Operations Snapshot panel showing timezone and coverage status.',
+  'manager:Live Checklist': 'A real-time view of employee checklist completion via the Admin Portal. Currently in an empty state as no checklist runs have been initiated for the day. The Audit Photos button is present for photo-based task verification.',
+  'manager:Planner': 'The six-day planning interface, prompting the manager to select a specific location before planning can begin — the planner operates one location at a time.',
+  'manager:Tasks': 'The same color-coded checklist template library as seen in the admin view, with the full grid of operational task categories visible.',
+  'manager:Prep & Order': 'The manager forecast view showing a full menu with daily forecasted quantities, contextual signals, and confidence score. Managers can adjust quantities, save as a draft, or push directly to the prep and order system.',
+  'manager:Recipes': 'The same recipe library with full admin capabilities (New Recipe, Import Recipes, Unit Mappings). Recipe cards display ingredient counts as badges, giving managers a quick view of recipe complexity from the library grid.',
+  'manager:Inventory Guide': 'A significantly more populated inventory sheet showing 113 total items across 13 vendors. Adds a Restaurant column to aggregate inventory across all locations into a single unified cross-location view.',
+  'manager:Spoilage': 'The Spoilage Manager with actual entries populated — 10 total entries, 30.6 quantity lost, $22 estimated cost, 8 unique items. Includes a Spoilage by Reason bar chart and detailed entries log per item.',
+  'manager:Shift Notes': 'Same shift notes feed as the admin view, but the manager sees a delete button on their own posts, indicating authorship-level permissions to manage their own notes.',
+  'manager:Rewards': 'The rewards page with live data — a Streak Leaderboard shows the top streak holder with a 3-day streak. The main Leaderboard shows a team member with 70 gold stars earned.',
+  'manager:Reports': 'The reporting hub for organizational data and analytics. Currently under construction.',
+  'manager:Organization': 'Identical in layout to the admin and owner organization settings — name, timezone, logo upload, and billing status.',
+  'manager:Invites': 'The same invite management page with the full sent invites log. Managers can send invites, filter by status and role, and resend or copy links for expired or pending entries.',
+  'manager:Team': 'The most detailed team view — full member roster with role, location assignments, job roles, PIN management, active status, and action buttons (Disable, Delete). Managers see their own record marked "Self" and have Set PIN available for their account.',
+  'admin:Dashboard': 'A more elevated version of the owner dashboard, accessible to administrators. Shows KPIs (active locations, total employees, location health, inactive locations) plus admin-specific capabilities like Add Location, Add Venue, Employee Directory shortcut, and an Operations Snapshot section.',
+  'admin:Live Checklist': 'A real-time view of employee checklist completion via the Admin Portal. The Audit Photos button is present here for photo-based task verification.',
+  'admin:Planner': 'A forward-looking scheduling tool for planning and assigning checklists across shifts for the upcoming six-day window. Each day is broken into shift lanes where checklists can be added and submitted. The right panel provides a Shift Library, Job Role Library, Available Planners list, and Recurring Schedules option.',
+  'admin:Tasks': 'A checklist template library displayed as a color-coded card grid. Admins can link resources such as PDFs, images, SOPs, and CSVs directly to tasks, and use the assignment tool to make templates available across multiple locations simultaneously.',
+  'admin:Prep & Order': 'The admin forecasting tool includes a 7-Day Forecast engine that ingests uploaded historical sales data to generate quantity predictions. The system factors in day-of-week trends and local events. Each menu item shows daily forecasted quantities that can be adjusted, saved as a draft, or pushed to the prep system. A confidence score and See Reasoning feature give admins full transparency.',
+  'admin:Recipes': 'The same visual recipe library as the owner view, but with added admin capabilities — a New Recipe button, an Import Recipes option, and a Unit Mappings section for converting custom units to standard measurements. Admins have full create and edit access.',
+  'admin:Inventory Guide': 'The same vendor inventory sheet structure as the owner view, but with additional admin controls — Import Inventory, Add Item, and Delete Restaurant Items buttons, plus an Edit action on every inventory row. Admins have full CRUD capability over inventory records.',
+  'admin:Spoilage': 'Identical in layout and functionality to the owner-facing spoilage module — logging spoiled items with type, brand, reason, quantity, and photo proof, alongside summary metrics and filtering tools.',
+  'admin:Shift Notes': 'A chronological communication feed where managers can post and track shift-related messages. Notes are tagged and filterable by category: Urgent, Event, Manager Update, Shift Update, and General. Each note displays the author, timestamp, location, audience tags, and an expandable comment thread.',
+  'admin:Rewards': 'Functionally identical to the owner-facing rewards module, tracking gold stars earned, streaks, weekly and daily earnings, overall rank, a leaderboard, and recent activity.',
+  'admin:Organization': 'The same organization settings page as the owner portal — covering organization name, timezone, logo upload, and Stripe billing setup — accessed through the admin portal.',
+  'admin:Invites': 'A user onboarding management page where admins can invite new team members by email, assigning a role (Admin, Manager, Lead, Employee), and selecting which locations they can access. A Sent Invites log tracks all pending, accepted, and expired invitations with resend and copy link options.',
+  'admin:Team': 'A comprehensive staff directory showing all team members across the organization broken down by role. Each row displays email, system role, location assignments, and job roles. Admins can change access levels and assign location-specific job roles directly from this page.',
+  'owner:Organization': 'The administrative configuration page for the organization account. Includes Organization Info (name, timezone, logo) and a Subscriptions & Billing section for Stripe payment integration.',
+  "admin:Dashboard:Edit a Linked Venue": [{"step":"Step 1","title":"Navigate to the Dashboard","desc":"Open the Dashboard tab.","img":"assets/images/image_094_dc1adfe21aadbe57.jpg"},{"step":"Step 2","title":"Scroll to Linked Venues","desc":"Scroll down to the Linked Venues section.","img":"assets/images/image_095_dd64446d9a99da77.jpg"},{"step":"Step 3","title":"Open Linked Venues","desc":"Click Linked Venues to view the list of venues.","img":"assets/images/image_096_c654183460fb6abc.jpg"},{"step":"Step 4","title":"Locate the Venue","desc":"Find the venue you want to edit.","img":"assets/images/image_097_53a856dbdb0b57ec.jpg"},{"step":"Step 5","title":"Click Edit Venue","desc":"Click the Edit Venue button/pencil icon.","img":"assets/images/image_098_ce57a0183c73b98d.jpg"},{"step":"Step 6","title":"Update Venue Details","desc":"Update Venue Name, Venue Type, Time Zone, Address, City, or State.","img":"assets/images/image_099_97ea2c23dfe72bbf.jpg"},{"step":"Step 7","title":"Review Changes","desc":"Review the venue information for accuracy.","img":"assets/images/image_100_92b5925f213e049a.jpg"},{"step":"Step 8","title":"Save Venue","desc":"Click the Save Venue button.","img":"assets/images/image_101_bf7248399c3f7c0e.jpg"},{"step":"Step 9","title":"Venue Updated","desc":"The venue information updates automatically.","img":"assets/images/image_102_dd2ef1bc4147ade7.jpg"}],
+  "admin:Planner:Add a Job Role": [{"step": "Step 1", "title": "Navigate to the Planner tab", "desc": "Open the Planner tab from the top navigation.", "img": "assets/images/image_103_e48197000a5e9183.jpg"}, {"step": "Step 2", "title": "Scroll to Restaurant Role Library", "desc": "Scroll down to the Restaurant Role Library section.", "img": "assets/images/image_104_3ba95288f65a5563.jpg"}, {"step": "Step 3", "title": "Enter the new job role", "desc": "Click the role field and type the new job role.", "img": "assets/images/image_105_8fc68dcefb539717.jpg"}, {"step": "Step 4", "title": "Click Add", "desc": "Click the Add button to save the new role.", "img": "assets/images/image_106_94751152c4a80b6e.jpg"}, {"step": "Step 5", "title": "Confirm role added", "desc": "The new job role appears in the role library.", "img": "assets/images/image_107_5226597728521f5b.jpg"}],
+};
+
+const DATA = {
+  shortcuts:{
+    color:'#22C55E',
+    desc:'Quick access guides for the most important setup workflows that connect prep lists, forecasts, inventory, menu items, and recipes.',
+    sections:[
+      {name:'Linking Menu Items',icon:'<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/><circle cx="8" cy="6" r="1"/><circle cx="8" cy="12" r="1"/><circle cx="8" cy="18" r="1"/>',items:[
+        {title:'Creating a Prep List',steps:['Navigate to the Prep & Order Automation section.','Open the Prep List area.','Select the prep day and restaurant location.','Add the required prep items and quantities.','Review the prep list for accuracy.','Save or push the prep list so the restaurant team can begin prep work.']},
+        {title:'Creating a Forecast → Prep List',steps:['Navigate to the Forecast section.','Enter or upload the forecast information.','Generate the forecast for the selected date range.','Review the forecasted quantities.','Push the forecast into the Prep List section.','Verify that the prep list reflects the forecasted needs.']},
+        {title:'Inventory → Menu',steps:['Navigate to the Inventory Guide.','Open the inventory item you want to connect.','Confirm the item name, unit, cost, vendor, and mapping details.','Navigate to the menu item or recipe that will use this inventory item.','Link the inventory item to the correct menu item ingredient.','Save the changes to keep inventory and menu tracking connected.']},
+        {title:'Add Inventory Items for a Menu Item',video:"assets/videos/video_001_baf0e1003c6b230e.webm",steps:['Click the Inventory Guide tab from the top navigation bar.','Click the Add Item button on the Vendor Inventory Sheets page.','Complete the Add Inventory Item form with the Sheet, Zone, Vendor, Item Name, Sheet Label, Item Code, Item Price, Item Quantity, Item Unit, Purchase Unit, Par, Category, and Brand.','Click Add Item at the bottom of the form to save the item.','Confirm the item appears in the Inventory Items table before connecting it to the menu item or recipe.']},
+        {title:'Prep List → Recipe Link',steps:['Navigate to the Recipes section.','Open the recipe or prep item you want to connect.','Review the ingredients and recipe components.','Link the proper prep item or recipe component to the prep list workflow.','Confirm that the recipe appears correctly in the prep list.','Save the recipe link so prep quantities can flow properly.']}
+      ]}
+    ]
+  },
+  owner:{
+    color:'#2DD4BF',
+    desc:'Full organizational visibility across all locations. Access every module, monitor KPIs, manage recipes, spoilage, rewards, and billing.',
+    sections:[
+      {name:'Dashboard',imgKey:'owner:Dashboard',icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',items:[
+        {title:'Add a Location',steps:['Navigate to the Dashboard tab.','Click the Add Location button.','Complete the required information in the location form.','Review the information for accuracy.','Click the Create Location button.','The new location will now be added to your organization.']},
+        {title:'Add a Venue',steps:['Navigate to the Dashboard tab.','Click the Add Venue button.','Complete the required information in the venue form.','Review the information for accuracy.','Click the Create Venue button.','The new venue will now be added to your organization.']},
+        {title:'Export Dashboard Data',steps:['Navigate to the Dashboard tab.','Click the Export button.','The dashboard data will automatically download to your device.']},
+        {title:'View Organization Employees',steps:['Navigate to the Dashboard tab.','Scroll down to the Organization Employees section.','Click the Open Employee Directory button.','From the Employee Directory, you can view: Total Members, Active Members, Owners, Admins, Managers, and Employees.','Use the available filters to search employees by Name, Email Address, Location, or Role.']}
+      ]},
+      {name:'Live Checklist',imgKey:'owner:Live Checklist',icon:'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',items:[]},
+      {name:'Planner',imgKey:'admin:Planner',icon:'<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',items:[
+        {title:'Add an Organization',steps:['Navigate to the Organization tab.','Complete the organization form by entering the Organization Name.','Select the Default Time Zone.','Upload the Organization Logo.','Click the Save Organization button at the bottom of the page.','Your organization has now been successfully saved.']}
+      ]},
+      {name:'Res. Checklist',imgKey:'owner:Res. Checklist',icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',items:[]},
+      {name:'Prep & Order',imgKey:'owner:Prep & Order',icon:'<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',items:[
+        {title:'View the Order Guide',steps:['Navigate to the Prep & Order Automation tab.','Click the Order Guide section.','Review your current ordering information, including Guide Items, Items to Order, Low Stock Alerts, and Exported Roles.','Review the list of restaurants associated with each status to monitor order progress and inventory needs.']},
+        {title:'View Inventory Items',steps:['Navigate to the Prep & Order Automation tab.','Select the Inventory section.','Scroll down to the Inventory Item Count section.','Click the Inventory Items button.','Review the available inventory items and their associated information.']},
+        {title:'View Prep Items',steps:['Navigate to the Prep & Order Automation tab.','Select the Inventory section.','Scroll down to the Inventory Item Count section.','Click the Prep Items button.','Review all available prep items and their associated information.']},
+        {title:'Download Inventory or Prep CSV Files',steps:['Navigate to the Prep & Order Automation tab.','Select the Inventory section.','Choose either Inventory Items or Prep Items.','Scroll down to the Inventory Options section.','Click the appropriate Download CSV button.','The selected CSV file will automatically download to your device.']},
+        {title:'View Prep Lists',steps:['Navigate to the Prep & Order Automation tab.','Click the Prep List section.','Review the prep list for the selected day.','View the required prep items and their quantities.','Click Print to print the prep list for kitchen or prep station use.']},
+        {title:'Upload Historical Data',steps:['Navigate to the Prep & Order Automation tab.','Click the Forecast section.','Under the 7-Day Forecast / Historical Data section, click the Upload File button.','Select the historical data file from your computer.','Once the file has finished uploading, click Generate 7-Day Forecast.','The system will use the uploaded historical data to generate the 7-day forecast.']},
+        {title:'View Your Order List',steps:['Navigate to the Prep & Order tab.','Scroll down to the Order List section.','Click the Order List button.','Review the available inventory items and their ordering information.','Review the Inventory Item, Vendor, Zone, Item Code, Pack, Purchase Unit, Live Count, and Guide Par columns.','Use this page to review inventory ordering information before placing or generating orders.'],note:'The Order List displays inventory information for the currently selected restaurant. If you do not see the expected items, verify that the correct restaurant is selected.'},
+        {title:'View Historical Submission Data',steps:['Navigate to the Prep & Order Automation tab.','Click the Prep List section.','Select the date you would like to review.','Click the Lookup button on the right-hand side of the page.','Review the historical submission data and prep list submission status for the selected date.'],note:'Historical submission data is only available for dates that have previously been submitted. If no results are displayed, verify that the correct date and restaurant are selected.'},
+        {title:'Replace or Delete Historical Data',steps:['Navigate to the Prep & Order Automation tab.','Click the Forecast section.','Scroll down to the 7-Day Forecast / Historical Data section.','To replace the current file, click Replace File, select the new file from your computer, and allow it to replace the existing historical data.','To delete the current file, click the Trash icon on the right-hand side and confirm the deletion if prompted.','The selected historical data file will be replaced or removed based on your action.'],note:'Replacing or deleting historical data will affect forecasting calculations that rely on past sales information. Verify that you are updating the correct restaurant before making changes.'}
+      ]},
+      {name:'Recipes',imgKey:'owner:Recipes',icon:'<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',items:[
+        {title:'View Recipes',steps:['Navigate to the Recipes tab.','Select one of the available recipe categories: All, Prep Items, Menu Items, or Base Recipes.','Browse the list of recipes or use the Search bar to quickly locate a specific recipe.','Click the recipe you would like to view.','Review the recipe details, including Ingredients, Preparation Steps, and Recipe Information.']}
+      ]},
+      {name:'Inventory Guide',imgKey:'owner:Inventory Guide',icon:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>',items:[]},
+      {name:'Spoilage',imgKey:'owner:Spoilage',icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',items:[
+        {title:'View Spoilage',steps:['Navigate to the Spoilage tab.','Once the page opens, you will see the Spoilage Dashboard.','From this page, you can view, track, and manage food waste across all locations.']},
+        {title:'Submit Spoilage',steps:['Navigate to the Spoilage tab.','At the top of the page, complete the spoilage form: Type, Item, Brand, Reason, Tag Type, Quantity, Unit.','Upload a photo of the spoiled item (optional).','Review the information for accuracy.','Click Submit to save the spoilage entry.']},
+        {title:'Search for a Spoilage Item',steps:['Navigate to the Spoilage tab.','Scroll down to the Search section.','Use one or more filters: Ingredient, Tag, Reason, Brand, Unit, Photo, or Date Range.','Enter your desired search criteria.','Matching spoilage records will automatically be displayed.']},
+        {title:'Export Spoilage to CSV',steps:['Navigate to the Spoilage tab.','Scroll down to the Spoilage Entries section.','Click the Export button on the right-hand side of the page.','A CSV file containing all spoilage entries will automatically download to your device.']}
+      ]},
+      {name:'Shift Notes',imgKey:'owner:Shift Notes',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',items:[]},
+      {name:'Rewards',imgKey:'owner:Rewards',icon:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',items:[]},
+      {name:'Reports',imgKey:'owner:Reports',icon:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',items:[]},
+      {name:'Organization',imgKey:'owner:Organization',icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',items:[]}
+    ]
+  },
+  admin:{
+    color:'#A78BFA',
+    desc:'Platform-level management. Add locations and venues, manage the employee directory, invite users, change roles, and configure organization settings.',
+    sections:[
+      {name:'Dashboard',imgKey:'admin:Dashboard',icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',items:[
+        {title:'Add a Location',steps:['Navigate to the Dashboard tab.','Click the Add Location button.','Complete the required information in the location form.','Review the information for accuracy.','Click the Create Location button.','The new location will now be added to your organization.']},
+        {title:'Add a Venue',steps:['Navigate to the Dashboard tab.','Click the Add Venue button.','Complete the required information in the venue form.','Review the information for accuracy.','Click the Create Venue button.','The new venue will now be added to your organization.']},
+        {title:'Export Dashboard Data',steps:['Navigate to the Dashboard tab.','Click the Export button.','The dashboard data will automatically download to your device.']},
+        {title:'View Organization Employees',steps:['Navigate to the Dashboard tab.','Scroll down to the Organization Employees section.','Click the Open Employee Directory button.','From the Employee Directory, you can view: Total Members, Active Members, Owners, Admins, Managers, and Employees.','Use the available filters to search employees by Name, Email Address, Location, or Role.']},
+        {title:'Edit a Linked Venue',steps:['Navigate to the Dashboard.','Scroll down to the Linked Venues section.','Click Linked Venues to view the list of venues.','Locate the venue you want to edit.','Click the Edit Venue button (pencil icon) on the left-hand side.','Update any of the following: Venue Name, Venue Type, Time Zone, Address, City, State.','Review your changes for accuracy.','Click the Save Venue button.','The venue information will be updated automatically.']}
+      ]},
+      {name:'Locations',imgKey:'admin:Locations',icon:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',items:[
+        {title:'Edit a Restaurant Overview',steps:['Navigate to the Restaurant Overview section.','Select the restaurant you would like to edit.','Update the information as needed: Restaurant Title, Venue Location, Service Type, Status, Date Created, Restaurant Color.','Click the Save button to apply your changes.']},
+        {title:'Change an Employee or Manager Role',steps:['Navigate to the Restaurant Overview section.','Scroll down to the Employees & Managers section.','Locate the employee or manager whose role you want to update.','Click the Role dropdown next to their name.','Select the new role: Manager, Lead, or Employee.','Once a new role is selected, the change is automatically saved.']},
+        {title:'Add a Prep Item',video:'assets/videos/prep_item_management.webm',steps:['Navigate to the Dashboard.','Scroll down to the Locations section.','Select the desired location.','On the left-hand side, click Prep Item Management.','Click the Add Prep Item button.','Complete the required prep item information:','Prep Item Name','Assigned Recipe','Prep Item Type','Production Mode','Description (optional)','Review the information for accuracy.','Click Add Prep Item.','The new prep item will automatically appear in the Prep Items list.']},
+        {title:'Import Prep Items',video:'assets/videos/import_prep_items.webm',steps:['Navigate to the Dashboard tab.','Scroll down to the Locations section.','Click the restaurant where you want to import prep items.','On the left-hand side of the page, scroll down and click Prep Item Management.','Scroll down to the Import Prep Items section.','Click Choose File.','Select the prep item file you would like to upload from your computer.','Once the file has been selected, click Import Prep Items.','Wait for the import to complete.','Review the Prep Item Management list to confirm the prep items were imported successfully.'],note:'Make sure you are working in the correct restaurant before importing.'},
+        {title:'Edit a Prep Item',video:'assets/videos/admin_edit_prep_items.webm',steps:['Navigate to Prep Item Management.','Scroll through the Prep Items list until you locate the item you want to edit.','Click the Edit button for the desired prep item.','Update any of the following information as needed:','Prep Item Name','Assigned Recipe','Prep Item Type','Production Mode','Status (Activate or Deactivate the prep item)','Description','Review your changes for accuracy.','Click the Save Changes button.','Your updates will be saved, and the prep item information will be updated automatically.']}
+      ]},
+      {name:'Live Checklist',icon:'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',items:[
+        {title:'View Live Checklists',steps:['Navigate to the Live Checklists tab.','Once the page opens, you will see a list of all active checklists.','Review the information: Checklist Activity, Scheduled Task, Status, Assigned To, Completed By.','Use this page to monitor checklist progress and track task completion.']}
+      ]},
+      {name:'Planner',imgKey:'admin:Planner',icon:'<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',items:[
+        {title:'Assign a Checklist to a Shift',video:'assets/videos/admin_planner_assign_checklist_to_shift.webm',steps:['Navigate to the Planner tab.','Select the shift you want to assign a checklist to.','Click the Add Checklist drop-down.','Select the desired checklist.','Click the Add Checklist button.','The checklist will now be assigned to the selected shift.'],note:'The shift must already be created before assigning a checklist.'},
+        {title:'Submit a Checklist to a Role',video:'assets/videos/admin_planner_submit_checklist_to_role.webm',steps:['Navigate to the Planner tab.','Select the shift you want to assign a checklist to.','Click the Add Checklist drop-down.','Select the desired checklist.','Click the Add Checklist button.','Click the Role button.','Select the role you want to assign the checklist to.','Click the Submit Shift button in the upper-right corner.','The checklist will now be assigned to the selected role for the shift.']},
+        {title:'Create a Shift',video:'assets/videos/admin_planner_create_shift.webm',steps:['Navigate to the Planner tab.','Select the desired date at the top of the page.','Scroll down to the Restaurant Shift Library section.','Enter the following information:<ul><li>Shift Name</li><li>Opening Time</li><li>Closing Time</li></ul>','Click the Save Shift button.','The new shift will now appear on the Planner page.']},
+        {title:'Delete a Shift',steps:['Navigate to the Planner tab.','Scroll down to the Restaurant Shift Library section.','Locate the shift you want to delete.','Click the Delete button.','Confirm the deletion if prompted.','The shift will be permanently removed.']},
+        {title:'Edit a Shift',steps:['Navigate to the Planner tab.','Scroll down to the Restaurant Shift Library section.','Locate the shift you want to edit.','Click the Edit button.','Update the shift name, opening time, or closing time.','Click the Save button.','The shift will now be updated.']},
+        {title:'Add a Job Role',steps:['Navigate to the Planner tab.','Scroll down to the Restaurant Role Library section.','Enter the new job role.','Click the Add button.','The new job role will be added to the role library.']},
+        {title:'Assign a Job Role to a Shift',video:'assets/videos/admin_planner_add_role_to_shift.webm',steps:['Navigate to the Planner tab.','Scroll down to the Day Planner section.','Select the shift you want to update.','Click the Role button.','Select the desired job role.','Click Save.','The selected job role will now be assigned to the shift.']},
+        {title:'Add a Note to a Shift',steps:['Navigate to the Planner tab.','Scroll down to the Day Planner section.','Select the shift you want to update.','Click the Notes button.','Enter your note.','Click Save.','The note will now be saved to the shift.']},
+        {title:'Remove a Checklist from a Shift',steps:['Navigate to the Planner tab.','Scroll down to the Day Planner section.','Select the shift.','Click the Remove button next to the checklist.','Confirm the removal when prompted.','The checklist will be removed from the shift.']},
+        {title:'Edit Shift Tasks',steps:['Navigate to the Planner tab.','Scroll down to the Day Planner section.','Select the shift you want to edit.','Click the Edit Task button.','Update one or more of the following:<ul><li>Assigned Employee</li><li>Job Role</li><li>Due Time</li><li>Skip Task for a specific day</li></ul>','Click Save Task Plan.','The task updates will now be saved.']},
+        {title:'Assign an Employee, Job Role, or Due Time Override',steps:['Navigate to the Planner tab.','Scroll down to the Day Planner section.','Select the shift you want to edit.','Click the Edit Task button.','Assign an employee, update the job role, or set a due time override.','Click Save Task Plan.','Your changes will now be saved.']},
+        {title:'View Recurring Schedules',steps:['Navigate to the Planner tab.','Click the Recurring Schedules button at the top of the page.','View all recurring shifts scheduled for each day of the week.']},
+        {title:'Add a Recurring Shift',steps:['Navigate to the Planner tab.','Click Recurring Schedules.','Select the day or days you want the shift to repeat.','Scroll down to the Shift Recurring Templates section.','Click the Add Shift drop-down.','Select the desired shift.','Click the Add Shift button.','The shift will now recur on the selected day or days.']},
+        {title:'Add a Checklist to a Recurring Shift',video:'assets/videos/admin_planner_add_checklist_to_recurring_shift.webm',steps:['Navigate to the Planner tab.','Click Recurring Schedules.','Select the day or days you want the checklist to recur on.','Scroll down to the Shift Recurring Templates section.','Add the recurring shift if it has not already been created.','Click the Select Checklist drop-down.','Choose the desired checklist.','Click the Add button.','The checklist will now be assigned to the recurring shift.']},
+        {title:'Delete a Checklist from a Recurring Shift',steps:['Navigate to the Planner tab.','Click Recurring Schedules.','Select the recurring day.','Scroll down to the recurring shift.','Click the Delete button.','The checklist will be removed from the recurring shift.']},
+        {title:'Delete a Recurring Shift',video:'assets/videos/admin_planner_delete_recurring_shift.webm',steps:['Navigate to the Planner tab.','Click Recurring Schedules.','Select the recurring day.','Scroll down to the recurring shift.','Click the Remove Shift button.','The recurring shift will be removed.']},
+        {title:'Edit a Recurring Shift Checklist',video:'assets/videos/admin_planner_edit_recurring_checklist_shift.webm',steps:['Navigate to the Planner tab.','Click Recurring Schedules.','Select the recurring day.','Scroll down to the recurring shift.','Click the Details button.','Update any of the following:<ul><li>Job Role</li><li>Start Date</li><li>End Date</li><li>Active Checklist</li></ul>','Your changes will be saved automatically.']},
+        {title:'Add Notes to a Recurring Shift Checklist',video:'assets/videos/admin_planner_add_notes_recurring_shift_checklist.webm',steps:['Navigate to the Planner tab.','Click Recurring Schedules.','Select the recurring day.','Scroll down to the recurring shift.','Click the Details button.','Enter your notes in the Notes section.','Notes are saved automatically.']},
+        {title:'Activate or Deactivate a Recurring Shift Checklist',video:'assets/videos/admin_planner_activate_deactivate_recurring_shift_checklist.webm',steps:['Navigate to the Planner tab.','Click Recurring Schedules.','Select the recurring day.','Scroll down to the recurring shift.','Click the Details button.','Check the Active Weekly Rule checkbox to activate the recurring shift checklist.','Uncheck the Active Weekly Rule checkbox to deactivate the recurring shift checklist.','Your changes will be saved automatically.']}
+      ]},
+      {name:'Tasks',imgKey:'admin:Tasks',icon:'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',items:[
+        {title:'Create a Checklist Manually',steps:['Navigate to the Tasks tab.','Click the Create Checklist button.','Enter the Checklist Name.','Add a task: Title, Description, Input Option, Task Importance, Required status.','Click the Add Task button.','Repeat until all tasks have been added.','Click the Create Checklist button.']},
+        {title:'Import Tasks',steps:['Navigate to the Tasks tab.','Click the Choose File button.','Select the task file from your computer.','Click the Upload & Import button.','Once the import is complete, the tasks will be added to the selected restaurant.']},
+        {title:'Edit a Checklist',steps:['Navigate to the Tasks tab.','Select the checklist you want to edit.','Click the task you want to update.','Make the desired changes.','Click Save Task button.','Click the Save Checklist button.']},
+        {title:'Delete a Checklist',steps:['Navigate to the Tasks tab.','Select the checklist you want to delete.','Click the Delete Checklist button.','Confirm the deletion if prompted.']},
+        {title:'Assign a Checklist to Specific Restaurants',steps:['Navigate to the Tasks tab.','Locate and open the checklist you want to update.','Scroll down to the Assigned To section.','Select the restaurant(s) you want the checklist available for.','Deselect any restaurants you no longer want it assigned to.','Click Save Checklist if prompted.'],note:'All restaurants have to be selected for assignment to take effect.'}
+      ]},
+      {name:'Prep & Order',imgKey:'admin:Prep & Order',icon:'<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',items:[
+        {title:'View the Order Guide',steps:['Navigate to the Prep & Order Automation tab.','Click the Order Guide section.','Review: Guide Items, Items to Order, Low Stock Alerts, Exported Roles, and Restaurant Count Status.']},
+        {title:'How to View Inventory Items',steps:['Navigate to the Prep & Order Automation tab.','Select the Inventory section.','Scroll down to the Inventory Item Count section.','Click the Inventory Items button.','Review the available inventory items and their associated information.'],note:'Ensure the correct restaurant is selected so the appropriate inventory items are displayed.'},
+        {title:'How to View Prep Items',steps:['Navigate to the Prep & Order Automation tab.','Select the Inventory section.','Scroll down to the Inventory Item Count section.','Click the Prep Items button.','Review all available prep items and their associated information.'],note:'Prep Items display products prepared in advance and used to create menu items.'},
+        {title:'View Prep Lists',steps:['Navigate to the Prep & Order Automation tab.','Click the Prep List section.','Review the prep list for the selected day.','Click Print if needed.']},
+        {title:'View Historical Submission Data',video:'assets/videos/view_historical_data.webm',steps:['Navigate to the Prep & Order Automation tab.','Click the Prep List section.','Select the date you would like to review.','Click the Lookup button on the right-hand side of the page.','Review the historical submission data for the selected date, including the submission status of the prep list.']},
+        {title:'Upload Historical Data',video:'assets/videos/upload_historical_data_trimmed.webm',steps:['Navigate to the Prep & Order Automation tab.','Click the Forecast section.','Under the 7-Day Forecast / Historical Data section, click the Upload File button.','Select the historical data file from your computer.','Once the file has finished uploading, click Generate 7-Day Forecast.','The system will use the uploaded historical data to generate the 7-day forecast.']}
+        ,{title:'Replace or Delete Historical Data',steps:['Navigate to the Prep & Order Automation tab.','Click the Forecast section.','Scroll down to the 7-Day Forecast / Historical Data section.','To replace the current historical data file, click the Replace File button.','Select the new file from your computer.','The new file will replace the existing historical data.','To delete the current historical data file, click the Trash icon on the right-hand side of the file.','Confirm the deletion if prompted.','The selected historical data file will be replaced or removed based on your action.']}
+      ]},
+      {name:'Recipes',imgKey:'admin:Recipes',icon:'<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',items:[
+        {title:'How to View Recipes',steps:['Navigate to the Recipes tab.','Select one of the following recipe categories: All, Prep Items, Menu Items, or Base Recipes.','The recipe list will automatically update to display the selected category.'],note:'💡 If you do not see your desired recipe, prep item, menu item, or base recipe, make sure you have the correct restaurant selected. Only items assigned to the currently selected restaurant will be displayed.'},
+        {title:'How to Import Recipes',steps:['Navigate to the Recipes tab.','Click the Import Recipes button.','Select the recipe file from your computer.','Click Upload.','Once the import is complete, the recipes will automatically be added to the recipe library.']},
+        {title:'How to Add Custom Mapping',steps:['Navigate to the Recipes tab.','Click Custom Mapping located directly beneath the Recipes tab.','Complete the required custom mapping fields.','Add your desired unit mapping.','Save the custom mapping once all fields are complete.']},
+        {title:'How to View Standard Units',steps:['Navigate to the Recipes tab.','The Recipe Library will open automatically.','Click Standard Units located beneath the Recipe Library.','Review the available measurements under Weight, Volume, Count, and Miscellaneous.']},
+        {title:'How to Assign or Remove a Recipe from a Restaurant',steps:['Ensure All Restaurants is selected.','Navigate to the Recipes tab.','The Recipe Library will display all available recipes.','Locate the recipe you would like to manage.','Under the recipe, click Assigned To.','A list of available restaurants will appear.','To assign the recipe to a restaurant, check the box next to the desired restaurant.','To remove the recipe from a restaurant, uncheck the box next to that restaurant.','Your changes will be saved automatically.'],note:'💡 Be sure you are viewing All Restaurants before assigning or removing recipes. Only restaurants with a checked box will have access to the selected recipe or menu item.'},
+        {title:'Link a New Inventory Item to a Current Recipe',video:'assets/videos/admin_link_current_recipe.webm',steps:['Navigate to the Recipes tab.','Locate the recipe you want to update.','Open the recipe.','Click the Edit button.','Scroll down to the Ingredients section.','Click Add Ingredient.','Enter the Ingredient Name, Quantity, and Unit.','Click the Link Item button on the right-hand side.','Locate the inventory item by typing its name in the Search bar or scrolling through the inventory list.','Select the desired inventory item.','The inventory item will now be linked to the recipe ingredient.','Click Save Recipe to save your changes.'],note:'💡 Linking an inventory item allows SOPros to track inventory usage and recipe costs accurately.'},
+        {title:'How to Link a New Inventory Item to a New Recipe',steps:['Navigate to the Recipes tab.','Click the New Recipe button.','Complete the required recipe information, including Recipe Name, Portion Quantity, Prep Time, Cook Time, Dish, and any other required fields.','Scroll down to the Ingredients section.','Click Add Ingredient.','Enter the Ingredient Name, Quantity, and Unit.','Click the Link Item button on the right-hand side.','Locate the inventory item by typing its name in the Search bar or scrolling through the inventory list.','Select the desired inventory item to link it to the ingredient.','Repeat these steps for any additional ingredients.','Click Save Recipe to create the new recipe.'],note:'💡 Link each ingredient to an inventory item whenever possible to support accurate inventory tracking, food-cost calculations, and forecasting.'},
+        {title:'Add a New Recipe Manually',steps:['Navigate to the Recipes tab.','Click the New Recipe button.','Complete: Recipe Name, Portion Quantity, Prep Time, Cook Time, Dish.','Complete remaining sections: Ingredients, Recipe Components, Preparation Steps.','Click Save to create the recipe.']},
+        {title:'Edit a Recipe',steps:['Navigate to the Recipes tab.','Select the appropriate category.','Locate and open the recipe.','Click the Edit button.','Update the recipe information as needed.','Click Save.']},
+        {title:'Delete a Recipe',steps:['Navigate to the Recipes tab.','Select the appropriate category.','Locate and open the recipe.','Click the Delete (Trash) button.','Confirm the deletion when prompted.'],note:'Deleting a recipe cannot be undone.'},
+        {title:'Publish a Recipe',steps:['Navigate to the Recipes tab.','Select a category.','Locate and open the recipe.','Click the Publish Item button.','The recipe will now be published and available throughout the system.']}
+      ]},
+      {name:'Inventory Guide',imgKey:'admin:Inventory Guide',icon:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>',items:[
+        {title:'View Inventory Items',steps:['Navigate to the Inventory Guide tab.','Scroll down to the Inventory Items section.','Review: Restaurant, Zone, Vendor, Item, Label, Item Code, Quantity, Unit, Cost, Unit Mapping, and Actions.']},
+        {title:'Add an Inventory Item',steps:['Navigate to the Inventory Guide tab.','Click the Add Item button.','Complete all required fields.','Review the information for accuracy.','Click the Add button.']},
+        {title:'Add a Vendor',steps:['Navigate to the Inventory Guide tab.','Scroll down to the Vendors section and click Show Vendors.','Click the Add Vendor button.','Enter the vendor information.','Click Save Vendor.']},
+        {title:'Delete a Vendor',steps:['Navigate to the Inventory Guide tab.','Scroll down to the Vendors section and click Show Vendors.','Select the vendor you want to delete.','Click the Edit button.','Click the Delete Vendor button.','Confirm the deletion by clicking OK.'],note:'Deleting a vendor cannot be undone.'}
+      ]},
+      {name:'Spoilage',imgKey:'admin:Spoilage',icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',items:[
+        {title:'View Spoilage',steps:['Navigate to the Spoilage tab.','Once the page opens, you will see the Spoilage Dashboard.','From this page, you can view, track, and manage food waste across all locations.']},
+        {title:'Submit Spoilage',steps:['Navigate to the Spoilage tab.','Complete the spoilage form: Type, Item, Brand, Reason, Tag Type, Quantity, Unit.','Upload a photo (optional).','Review the information for accuracy.','Click Submit to save the spoilage entry.']},
+        {title:'Export Spoilage to CSV',steps:['Navigate to the Spoilage tab.','Scroll down to the Spoilage Entries section.','Click the Export button on the right-hand side of the page.','A CSV file containing all spoilage entries will automatically download to your device.']}
+      ]},
+      {name:'Organization',imgKey:'admin:Organization',icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',items:[]},
+      {name:'Invites',imgKey:'admin:Invites',icon:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',items:[
+        {title:'Invite a User',steps:['Navigate to the Invite tab.','Enter the Email Address, Role, and Restaurant.','Click Review Invite List.','Once verified, submit the invite.','The user will receive an invitation to join the organization.']},
+        {title:'View Sent Invites',steps:['Navigate to the Invites tab.','Scroll down to the Sent Invites section.','Use filters to search by Email Address, Role, or Restaurant.','View the status of each invite: Pending, Accepted, or Expired.']}
+      ]},
+      {name:'Shift Notes',imgKey:'admin:Shift Notes',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',items:[]},
+      {name:'Rewards',imgKey:'admin:Rewards',icon:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',items:[]},
+      {name:'Team',imgKey:'admin:Team',icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',items:[
+        {title:'View Your Team and Team Roles',steps:['Navigate to the Team tab.','Scroll down to the Team Members section.','Review the team summary: Members, Owners, Admins, Managers, Leads, Employees.','Review the list of team members.']},
+        {title:"Change a Member's Role",steps:['Navigate to the Team tab.','Scroll down to the team member you want to update.','Click Change Access.','Select or remove the appropriate role.','Click Save Roles.']},
+        {title:'Disable a Member',steps:['Navigate to the Team tab.','Locate the member you want to disable.','Click Disable.','Click Disable Account in the confirmation window.']},
+        {title:'Delete a Member',steps:['Navigate to the Team tab.','Locate the member you want to delete.','Click Delete.','Click Delete Account in the confirmation window.'],note:'Deleting a member permanently removes their account and cannot be undone.'}
+      ]}
+    ]
+  },
+  manager:{
+    color:'#3B82F6',
+    desc:'The operational hub at the restaurant level. Drive daily forecasts, prep lists, checklists, recipes, inventory, shift notes, and team management.',
+    sections:[
+      {name:'Dashboard',imgKey:'manager:Dashboard',icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',items:[
+        {title:'Add a Location',steps:['Navigate to the Dashboard tab.','Click the Add Location button.','Complete the required information in the location form.','Review the information for accuracy.','Click the Create Location button.']},
+        {title:'Export Dashboard Data',steps:['Navigate to the Dashboard tab.','Click the Export button.','The dashboard data will automatically download to your device.']},
+        {title:'View Organization Employees',steps:['Navigate to the Dashboard tab.','Scroll down to the Organization Employees section.','Click the Open Employee Directory button.','You can view: Total Members, Active Members, Owners, Admins, Managers, and Employees.','Use filters to search by Name, Email Address, Location, or Role.']}
+      ]},
+      {name:'Live Checklist',imgKey:'manager:Live Checklist',icon:'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',items:[
+        {title:'View Live Checklists',steps:['Navigate to the Live Checklists tab.','Once the page opens, you will see a list of all active checklists.','Review the information: Checklist Activity, Scheduled Task, Status, Assigned To, Completed By.']}
+      ]},
+      {name:'Planner',imgKey:'manager:Planner',icon:'<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',items:[
+        {title:'Assign a Checklist to a Shift',steps:['Navigate to the Planner tab.','Select the shift you want to assign a checklist to.','Click the Add Checklist drop-down.','Select the desired checklist.','Click the Add Checklist button.'],note:'The shift must already be created.'},
+        {title:'Create a Shift',steps:['Navigate to the Planner tab.','Select the desired date at the top of the page.','Scroll down to the Restaurant Shift Library section.','Enter: Shift Name, Opening Time, Closing Time.','Click the Save Shift button.']},
+        {title:'Add a Recurring Shift',steps:['Navigate to the Planner tab.','Click Recurring Schedules.','Select the day(s) you want the shift to repeat.','Scroll down to the Shift Recurring Templates section.','Click the Add Shift drop-down and select the desired shift.','Click the Add Shift button.']}
+      ]},
+      {name:'Tasks',imgKey:'manager:Tasks',icon:'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',items:[
+        {title:'Create a Checklist Manually',steps:['Navigate to the Tasks tab.','Click the Create Checklist button.','Enter the Checklist Name.','Add a task: Title, Description, Input Option, Task Importance, Required status.','Click the Add Task button. Repeat until all tasks have been added.','Click the Create Checklist button.']},
+        {title:'Import Tasks',steps:['Navigate to the Tasks tab.','Click the Choose File button.','Select the task file from your computer.','Click the Upload & Import button.']},
+        {title:'Assign a Checklist to Specific Restaurants',steps:['Navigate to the Tasks tab.','Locate and open the checklist you want to update.','Scroll down to the Assigned To section.','Select the restaurant(s) you want the checklist available for.','Click Save Checklist if prompted.'],note:'All restaurants have to be selected for assignment to take effect.'}
+      ]},
+      {name:'Prep & Order',imgKey:'manager:Prep & Order',icon:'<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',items:[
+        {title:'View the Order Guide',steps:['Navigate to the Prep & Order Automation tab.','Click the Order Guide section.','Review: Guide Items, Items to Order, Low Stock Alerts, and Restaurant Count Status.']},
+        {title:'View Inventory Items',steps:['Navigate to the Prep & Order Automation tab.','Select the Inventory section.','Scroll down to the Inventory Item Count section.','Click the Inventory Items button.']},
+        {title:'Download Inventory or Prep CSV Files',steps:['Navigate to the Prep & Order Automation tab.','Select the Inventory section.','Choose either Inventory Items or Prep Items, depending on which data you want to export.','Scroll down to the Inventory Options section.','Click the appropriate Download CSV button.','The selected CSV file will automatically download to your device.']},
+        {title:'View Prep Lists',steps:['Navigate to the Prep & Order Automation tab.','Click the Prep List section.','Review the prep list for the selected day.','Click Print if needed.']},
+        {title:'View Historical Submission Data',video:'assets/videos/view_historical_data.webm',steps:['Navigate to the Prep & Order Automation tab.','Click the Prep List section.','Select the date you would like to review.','Click the Lookup button on the right-hand side of the page.','Review the historical submission data for the selected date, including the submission status of the prep list.']},
+        {title:'Upload Historical Data',video:'assets/videos/upload_historical_data_trimmed.webm',steps:['Navigate to the Prep & Order Automation tab.','Click the Forecast section.','Under the 7-Day Forecast / Historical Data section, click the Upload File button.','Select the historical data file from your computer.','Once the file has finished uploading, click Generate 7-Day Forecast.','The system will use the uploaded historical data to generate the 7-day forecast.']},
+        {title:'Replace or Delete Historical Data',steps:['Navigate to the Prep & Order Automation tab.','Click the Forecast section.','Scroll down to the 7-Day Forecast / Historical Data section.','To replace the current historical data file:','• Click the Replace File button.','• Select the new file from your computer.','• The new file will replace the existing historical data.','To delete the current historical data file:','• Click the Trash icon on the right-hand side of the file.','• Confirm the deletion if prompted.','The selected historical data file will be replaced or removed based on your action.']}
+      ]},
+      {name:'Recipes',imgKey:'manager:Recipes',icon:'<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',items:[
+        {title:'Add a New Recipe Manually',steps:['Navigate to the Recipes tab.','Click the New Recipe button.','Complete the required recipe information, including Recipe Name, Portion Quantity, Prep Time, Cook Time, and Dish.','Complete the Ingredients, Recipe Components, and Preparation Steps sections.','Click Save to create the recipe.']},
+        {title:'View Recipes',steps:['Navigate to the Recipes tab.','Select one of the following categories: All, Prep Items, Menu Items, or Base Recipes.','The recipe list will automatically update to display the selected category.'],note:'💡 If you do not see your desired recipe, prep item, menu item, or base recipe, make sure you have the correct restaurant selected. Only items assigned to the currently selected restaurant will be displayed.'},
+        {title:'How to Add a Custom Mapping',steps:['Navigate to the Recipes tab.','Click Custom Mapping.','Complete the Custom Name field.','Select the Standard Unit.','Enter the Conversion Factor.','Add Notes if needed.','Click the Add button.','The custom mapping will now appear in the Custom Unit Mappings list.']},
+        {title:'How to View Standard Units',steps:['Navigate to the Recipes tab.','Click Standard Units.','Review the available measurement categories: Weight, Volume, Count, and Miscellaneous.','Use these standard units when creating or editing recipes.']},
+        {title:'How to Assign or Remove a Recipe from a Restaurant',steps:['Make sure All Restaurants is selected.','Navigate to the Recipes tab.','Select Prep Items, Menu Items, or Base Recipes.','Locate the recipe by scrolling through the list or using the Search bar.','Open the recipe.','Locate the Assigned To section.','Check the box next to a restaurant to assign the recipe.','Uncheck the box to remove the recipe from a restaurant.','Your changes will be saved automatically or when prompted.'],note:'All Restaurants must be selected before assigning or removing a recipe from a restaurant.'},
+        {title:'How to Publish a Recipe',steps:['Navigate to the Recipes tab.','Select Prep Items, Menu Items, or Base Recipes.','Locate the recipe using the list or Search bar.','Open the recipe.','Click the Publish Item button.','The recipe will now be published and available throughout the system.']},
+        {title:'How to Link a New Inventory Item to a Current Recipe',steps:['Navigate to the Recipes tab.','Locate the recipe you want to update.','Open the recipe.','Click the Edit button.','Scroll down to the Ingredients section.','Click Add Ingredient.','Enter the Ingredient Name, Quantity, and Unit.','Click the Link Item button on the left-hand side.','Search for the inventory item by typing the item name in the Search bar or scrolling through the inventory list.','Select the desired inventory item.','The inventory item will now be linked to the recipe ingredient.','Click Save Recipe to save your changes.']},
+        {title:'How to Link a New Inventory Item to a New Recipe',steps:['Navigate to the Recipes tab.','Click the New Recipe button.','Complete the required recipe information, including Recipe Name, Portion Quantity, Prep Time, Cook Time, Dish, and any other required fields.','Scroll down to the Ingredients section.','Click Add Ingredient.','Enter the Ingredient Name, Quantity, and Unit.','Click the Link Item button on the right-hand side.','Locate the inventory item by typing the item name in the Search bar or scrolling through the inventory list.','Select the desired inventory item to link it to the ingredient.']},
+        {title:'Edit a Recipe',steps:['Navigate to the Recipes tab.','Select the appropriate category.','Locate and open the recipe.','Click the Edit button.','Update the recipe information as needed.','Click Save.']}
+      ]},
+      {name:'Inventory Guide',imgKey:'manager:Inventory Guide',icon:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>',items:[
+        {title:'View Inventory Items',steps:['Navigate to the Inventory Guide tab.','Scroll down to the Inventory Items section.','Review: Restaurant, Zone, Vendor, Item, Label, Item Code, Quantity, Unit, Cost, Unit Mapping, and Actions.']},
+        {title:'Add an Inventory Item',steps:['Navigate to the Inventory Guide tab.','Click the Add Item button.','Complete all required fields.','Review the information for accuracy.','Click the Add button.']}
+      ]},
+      {name:'Spoilage',imgKey:'manager:Spoilage',icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',items:[
+        {title:'Submit Spoilage',steps:['Navigate to the Spoilage tab.','Complete the spoilage form: Type, Item, Brand, Reason, Tag Type, Quantity, Unit.','Upload a photo (optional).','Click Submit To Manager to save the spoilage entry.']},
+        {title:'Search for a Spoilage Item',steps:['Navigate to the Spoilage tab.','Scroll down to the Search section.',{text:'Use one or more of the following filters to locate a spoilage record:',bullets:['Ingredient','Tag','Reason','Brand','Unit','Photo','Date Range (From Date – To Date)']},'Enter your desired search criteria.','Matching spoilage records will automatically be displayed.']},
+        {title:'Export Spoilage to CSV',steps:['Navigate to the Spoilage tab.','Scroll down to the Spoilage Entries section.','Click the Export button.','A CSV file will automatically download to your device.']}
+      ]},
+      {name:'Shift Notes',imgKey:'manager:Shift Notes',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',items:[
+        {title:'Create a Shift Note',steps:['Navigate to the Shift Notes tab.','Click the New Note button in the upper-right corner.','Enter your note in the Message field.','Select the appropriate Importance level: Urgent, Event, Manager Update, Shift Update, or General.','Select the recipient for the note.','Review the information for accuracy.','Click Send Note.']},
+        {title:'Reply to a Shift Note',steps:['Navigate to the Shift Notes tab.','Use the Tag filter to locate the note you want to reply to.','Select the desired shift note.','Scroll to the bottom of the note.','Click the Comment field.','Enter your reply.','Click the Reply button on the right-hand side.']}
+      ]},
+      {name:'Rewards',imgKey:'manager:Rewards',icon:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',items:[]},
+      {name:'Reports',imgKey:'manager:Reports',icon:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',items:[]},
+      {name:'Organization',imgKey:'manager:Organization',icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',items:[
+        {title:'Add an Organization',steps:['Navigate to the Organization tab.','Complete: Organization Name, Default Time Zone, Organization Logo.','Click the Save Organization button.','Your organization has now been successfully saved.']}
+      ]},
+      {name:'Invites',imgKey:'manager:Invites',icon:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>',items:[
+        {title:'Invite a User',steps:['Navigate to the Invite tab.','Enter the Email Address, Role, and Restaurant.','Click Review Invite List.','Once verified, submit the invite.']},
+        {title:'View Sent Invites',steps:['Navigate to the Invites tab.','Scroll down to the Sent Invites section.','Use filters to search by Email Address, Role, or Restaurant.','View the status of each invite: Pending, Accepted, or Expired.']}
+      ]},
+      {name:'Team',imgKey:'manager:Team',icon:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',items:[
+        {title:'View Your Team and Team Roles',steps:['Navigate to the Team tab.','Scroll down to the Team Members section.','Review the team summary: Members, Owners, Admins, Managers, Leads, Employees.']},
+        {title:"Change a Member's Role",steps:['Navigate to the Team tab.','Scroll down to the team member you want to update.','Click Change Access.','Select or remove the appropriate role.','Click Save Roles.']},
+        {title:'Disable a Member',steps:['Navigate to the Team tab.','Locate the member you want to disable.','Click Disable.','Click Disable Account in the confirmation window.']},
+        {title:'Delete a Member',steps:['Navigate to the Team tab.','Locate the member you want to delete.','Click Delete.','Click Delete Account in the confirmation window.'],note:'Deleting a member permanently removes their account and cannot be undone.'}
+      ]}
+    ]
+  },
+  lead:{
+    color:'#F59E0B',
+    desc:'Floor-level supervisor scoped to assigned operations. Submit on-hand inventory counts, assign prep tasks, manage checklists, and communicate via shift notes.',
+    sections:[
+      {name:'Dashboard',imgKey:'lead:Dashboard',icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',items:[]},
+      {name:'My Checklists',imgKey:'lead:My Checklists',icon:'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',items:[]},
+      {name:'Live Checklist',imgKey:'lead:Live Checklist',icon:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',items:[]},
+      {name:'Checklists',imgKey:'lead:Checklists',icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',items:[
+        {title:'View Checklists',steps:['Navigate to the Checklists tab.','Once the page opens, you will see a list of all available restaurant checklists.','Review the information displayed for each checklist: Restaurant, Checklist Name, Tasks.']}
+      ]},
+      {name:'Prep & Order',imgKey:'lead:Prep & Order',icon:'<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',items:[
+        {title:'View Inventory Items',steps:['Navigate to the Prep & Order Automation tab.','Select the Inventory Count Section.','Scroll down to the Inventory Item Count section.','Click the Inventory Items button.']},
+        {title:'View Prep Lists',steps:['Navigate to the Prep & Order Automation tab.','Click the Prep List section.','Review the prep list for the selected day.','Click Print if you want a paper copy.']},
+        {title:'View Historical Submission Data',steps:['Navigate to the Prep & Order Automation tab.','Click the Prep List section.','Select the date you would like to review.','Click the Lookup button on the right-hand side.','Review the historical submission data for the selected date.']}
+      ]},
+      {name:'Recipes',imgKey:'lead:Recipes',icon:'<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',items:[
+        {title:'View Recipes',steps:['Navigate to the Recipes tab.','Select one of the available recipe categories: All, Prep Items, Menu Items, or Base Recipes.','Browse the list or use the Search bar to locate a specific recipe.','Click the recipe you would like to view.','Review the recipe details: Ingredients, Preparation Steps, Recipe Information.']}
+      ]},
+      {name:'Spoilage',imgKey:'lead:Spoilage',icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',items:[
+        {title:'Submit Spoilage',steps:['Navigate to the Spoilage tab.','Complete the spoilage form: Type, Item, Brand, Reason, Tag Type, Quantity, Unit.','Upload a photo of the spoiled item (optional).','Review the information for accuracy.','Click Submit To Manager to save the spoilage entry.']}
+      ]},
+      {name:'Shift Notes',imgKey:'lead:Shift Notes',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',items:[
+        {title:'Create a Shift Note',steps:['Navigate to the Shift Notes tab.','Click the New Note button in the upper-right corner.','Enter your note in the Message field.','Select the appropriate Importance level: Urgent, Event, Manager Update, Shift Update, or General.','Select the recipient for the note.','Review the information for accuracy.','Click Send Note.']},
+        {title:'Reply to a Shift Note',steps:['Navigate to the Shift Notes tab.','Use the Tag filter to locate the note you want to reply to.','Select the desired shift note.','Scroll to the bottom of the note.','Click the Comment field.','Enter your reply.','Click the Reply button on the right-hand side.']}
+      ]},
+      {name:'Rewards',imgKey:'lead:Rewards',icon:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',items:[
+        {title:'Award Gold Stars to a Team Member',steps:['Navigate to the Rewards tab.','Scroll down to the Award Gold Stars section.','Select the employee you want to reward.','Enter the number of Gold Stars you would like to award.','Enter a personalized message for the employee.','Click the Award button.']}
+      ]}
+    ]
+  },
+  employee:{
+    color:'#34D399',
+    desc:'Frontline task executor. View and print assigned prep tasks, complete the work, submit actual prepped amounts when there is variance, and track your rewards.',
+    sections:[
+      {name:'Dashboard',imgKey:'employee:Dashboard',icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',items:[
+        {title:'View Your Dashboard',steps:['Navigate to the Dashboard tab.','Review your personal dashboard overview: Checklist Progress, Active Checklists, Completed Tasks, Gold Stars.','View your current work assignments: Current Checklists, Prep Tasks Assigned to You, Upcoming Tasks.','Review your Reward Status to monitor your progress and achievements.']},
+        {title:'View Your Reward Status From The Dashboard',steps:['Navigate to the Dashboard tab.','Scroll down to the Reward Status section.','Click the View Rewards button.','Review your rewards: Gold Stars, Reward History, Leaderboard Rankings, Current Streak.']}
+      ]},
+      {name:'Checklist',imgKey:'employee:Checklist',icon:'<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',items:[]},
+      {name:'Prep Tasks',imgKey:'employee:Prep Tasks',icon:'<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',items:[
+        {title:'View Your Prep Tasks',steps:['Navigate to the Prep Tasks tab.','Review your assigned prep task list for the selected date.','For each prep task, you can view: Task Name, Completion Status, Completion Rate, Estimated Completion Time.','To view prep tasks for a different day, select the desired Date.','Use available filters to narrow your results by Location or Technique.']}
+      ]},
+      {name:'Recipes',imgKey:'employee:Recipes',icon:'<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',items:[
+        {title:'View Recipes',steps:['Navigate to the Recipes tab.','Select one of the available recipe categories: All, Prep Items, Menu Items, or Base Recipes.','Browse the list or use the Search bar to locate a specific recipe.','Click the recipe you would like to view.','Review the recipe details: Ingredients, Preparation Steps, Recipe Information.']}
+      ]},
+      {name:'Spoilage',imgKey:'employee:Spoilage',icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',items:[
+        {title:'Submit Spoilage',steps:['Navigate to the Spoilage tab.','Complete the spoilage form: Type, Item, Brand, Reason, Tag Type, Quantity, Unit.','Upload a photo of the spoiled item (optional).','Review the information for accuracy.','Click Submit To Manager to save the spoilage entry.']}
+      ]},
+      {name:'Shift Notes',imgKey:'employee:Shift Notes',icon:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',items:[
+        {title:'Create a Shift Note',steps:['Navigate to the Shift Notes tab.','Click the New Note button in the upper-right corner.','Enter your note in the Message field.','Select the appropriate Importance level: Urgent, Event, Manager Update, Shift Update, or General.','Select the recipient for the note.','Click Send Note.']},
+        {title:'Reply to a Shift Note',steps:['Navigate to the Shift Notes tab.','Use the Tag filter to locate the note you want to reply to.','Select the desired shift note.','Scroll to the bottom of the note.','Click the Comment field.','Enter your reply.','Click the Reply button on the right-hand side.']}
+      ]},
+      {name:'Rewards',imgKey:'employee:Rewards',icon:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',items:[
+        {title:'View Your Rewards',steps:['Navigate to the Rewards tab.','Review your Rewards Dashboard: Total Gold Stars, Current Streak, Gold Stars Earned Today, Gold Stars Earned This Week, Current Ranking.','View the Leaderboard rankings for: This Week, This Month, All Time.','Scroll down to the Recent Activity section to view your latest Gold Star awards.']}
+      ]}
+    ]
+  }
+};
+
+let currentRole='admin';
+let currentSection=0;
+
+function svgIcon(p){return`<svg viewBox="0 0 24 24">${p}</svg>`;}
+
+function getSlideKey(role, sectionName, itemTitle){
+  if(!HOWTO_SLIDES) return null;
+  const titles=[itemTitle];
+  if(itemTitle && itemTitle.startsWith('How to ')) titles.push(itemTitle.replace(/^How to /,''));
+  if(itemTitle && !itemTitle.startsWith('How to ')) titles.push('How to '+itemTitle);
+  for(const t of titles){
+    const key=role+':'+sectionName+':'+t;
+    if(HOWTO_SLIDES[key]) return key;
+  }
+  return null;
+}
+function hasWalkthrough(role, sectionName, itemTitle){return !!getSlideKey(role,sectionName,itemTitle);}
+function hasSectionWalkthrough(role, section){return !!(section.items && section.items.some(item=>hasWalkthrough(role, section.name, item.title)));}
+function hasSectionVideo(section){return !!(section.items && section.items.some(item=>item.video));}
+function eyeIcon(active=true){return `<span class="walk-eye${active?'':' muted'}" title="${active?'Walkthrough available':'No walkthrough yet'}"><svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></span>`;}
+
+function videoIcon(active=true){return `<span class="video-camera${active?'':' muted'}" title="Video walkthrough available" aria-label="Video walkthrough available"><svg viewBox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14"/><rect x="3" y="6" width="12" height="12" rx="2" ry="2"/></svg></span>`;}
+
+
+function switchRole(r){
+  currentRole=r;currentSection=-1;
+  document.querySelectorAll('.rtab').forEach(b=>b.classList.toggle('active',b.dataset.role===r));
+  renderSidebar();renderContent();closePanel();
+}
+
+function goOverview(){currentSection=-1;renderSidebar();renderContent();closePanel();}
+
+function selectSection(i){currentSection=i;renderSidebar();renderContent();closePanel();}
+
+function renderSidebar(){
+  const d=DATA[currentRole],col=d.color;
+  const overSVG='<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>';
+  let h=`<div class="section-label" style="color:${col}aa">${currentRole.toUpperCase()}</div>`;
+  h+=`<button class="nav-item${currentSection===-1?' active':''}" onclick="goOverview()" style="${currentSection===-1?`color:${col}`:''}"><svg viewBox="0 0 24 24" style="width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:0.7">${overSVG}</svg>Overview</button>`;
+  d.sections.forEach((s,i)=>{
+    h+=`<button class="nav-item${i===currentSection?' active':''}" onclick="selectSection(${i})" style="${i===currentSection?`color:${col}`:''}">${svgIcon(s.icon)}<span style="flex:1">${s.name}</span>${hasSectionVideo(s)?videoIcon(true):''}</button>`;
+  });
+  document.getElementById('sidebar').innerHTML=h;
+}
+
+function renderContent(){
+  const d=DATA[currentRole],col=d.color;
+  if(currentSection===-1){
+
+    let h=`<div class="page-eyebrow" style="color:${col}">${currentRole.charAt(0).toUpperCase()+currentRole.slice(1)} · Overview</div>
+      <div class="page-title">${currentRole.charAt(0).toUpperCase()+currentRole.slice(1)} Portal</div>
+      <div class="page-desc">${d.desc}</div>`;
+
+    h+=`<div style="margin-bottom:16px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--faint)">Sections in this role</div><div style="display:flex;flex-direction:column;gap:8px;">`;
+    d.sections.forEach((s,i)=>{
+      h+=`<div onclick="selectSection(${i})" style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(14,31,56,0.6);border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:all .15s;"
+        onmouseover="this.style.borderColor='rgba(37,99,235,0.4)';this.style.transform='translateX(2px)'"
+        onmouseout="this.style.borderColor='var(--line)';this.style.transform='none'">
+        <div style="width:32px;height:32px;border-radius:8px;background:${col}22;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:${col};fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;">${s.icon}</svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:600;color:var(--ink)">${s.name}</div>
+          <div style="font-size:12px;color:var(--faint)">${s.items&&s.items.length>0?s.items.length+' how-to guide'+(s.items.length>1?'s':''):'Overview only'}</div>
+        </div>
+        ${hasSectionWalkthrough(currentRole,s)?eyeIcon(true):''}
+        ${hasSectionVideo(s)?videoIcon(true):''}
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--faint);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>`;
+    });
+    h+=`</div>`;
+    document.getElementById('content').innerHTML=h;
+    return;
+  }
+  const s=d.sections[currentSection];
+  const imgKey=s.imgKey;
+  const secDesc=SECTION_DESCS[currentRole+':'+s.name];
+  let h=`<div class="page-eyebrow" style="color:${col}">${currentRole.charAt(0).toUpperCase()+currentRole.slice(1)} · ${s.name}</div>
+    <div class="page-title">${s.name}</div>`;
+  if(secDesc){h+=`<div class="page-desc">${secDesc}</div>`;}
+  if(imgKey&&IMGS[imgKey]){
+    h+=`<div class="screen-shot" style="margin-bottom:28px;"><div class="screen-shot-caption">${s.name} screen</div><img src="${IMGS[imgKey]}" alt="${s.name}" loading="lazy"></div>`;
+  }
+  if(s.items&&s.items.length>0){
+    h+=`<div style="margin-bottom:14px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--faint)">How-to guides</div>`;
+    h+=`<div class="howto-grid">`;
+    s.items.forEach((item,i)=>{
+      h+=`<div class="howto-card" onclick="openPanel(${i})">
+        <div class="num" style="background:${col}22;color:${col}">${String(i+1).padStart(2,'0')}</div>
+        <div class="label">How to ${item.title}</div>
+        ${hasWalkthrough(currentRole,s.name,item.title)?eyeIcon(true):''}
+        ${item.video?videoIcon(true):''}
+        <div class="chev">${svgIcon('<polyline points="9 18 15 12 9 6"/>')}</div>
+      </div>`;
+    });
+    h+=`</div>`;
+  } else {
+    h+=`<div style="padding:20px;background:rgba(14,31,56,0.5);border:1px solid var(--line);border-radius:12px;margin-top:8px;">
+      <div style="font-size:13px;color:var(--faint);margin-bottom:8px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase">Overview only</div>
+      <div style="font-size:14px;color:var(--dim);line-height:1.7">No step-by-step how-to guides are documented for this section. Use the screenshot above to familiarise yourself with the layout.</div>
+    </div>`;
+  }
+  document.getElementById('content').innerHTML=h;
+}
+
+function openPanel(idx){
+  const d=DATA[currentRole],s=d.sections[currentSection],item=s.items[idx],col=d.color;
+  const imgKey=s.imgKey;
+  const ssKey = getSlideKey(currentRole,s.name,item.title) || (currentRole+':'+s.name+':'+item.title);
+  const hasWalkthrough = ssKey && HOWTO_SLIDES && HOWTO_SLIDES[ssKey];
+  document.getElementById('panel-kicker').textContent=`${currentRole.charAt(0).toUpperCase()+currentRole.slice(1)} · ${s.name}`;
+  document.getElementById('panel-title').textContent=`How to ${item.title}`;
+  let b='';
+  if (item.video) {
+    b += '<div style="margin-bottom:20px;">'
+       + '<div class="screen-shot">'
+       + '<div class="screen-shot-caption">Video walkthrough · audio removed</div>'
+       + '<video controls muted playsinline style="width:100%;display:block;background:#050e1a;border-radius:0 0 10px 10px;" src="' + item.video + '"></video>'
+       + '</div></div>';
+  }
+  if (hasWalkthrough) {
+    const firstSlide = HOWTO_SLIDES[ssKey][0];
+    b += '<div style="margin-bottom:20px;">'
+       + '<div class="screen-shot" style="cursor:pointer" onclick="openSS(\'' + ssKey + '\', \'' + item.title.replace(/'/g, "\\'") + '\')">'
+       + '<div class="screen-shot-caption">Walkthrough preview · Slide 1</div>'
+       + '<img src="' + firstSlide.img + '" alt="' + firstSlide.title + '" loading="lazy">'
+       + '</div>'
+       + '<button class="ss-trigger" style="margin-top:10px;margin-left:0" data-sskey="' + ssKey + '" data-sstitle="' + item.title + '" onclick="openSSFromBtn(this)">'
+       + '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg> Open walkthrough'
+       + '</button></div>';
+  }
+  item.steps.forEach((step,i)=>{
+    b+=`<div class="step-item"><div class="step-num" style="background:${col}22;color:${col}">${i+1}</div><div class="step-text">${step}</div></div>`;
+  });
+  if(item.note){b+=`<div class="note-box"><strong>Note: </strong>${item.note}</div>`;}
+  document.getElementById('panel-body').innerHTML=b;
+  document.getElementById('panel').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closePanel(){
+  document.getElementById('panel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+
+// ── SLIDESHOW LOGIC ──────────────────────────────────────
+let ssCur = 0, ssSlides = [];
+
+function openSSFromBtn(btn) {
+  openSS(btn.dataset.sskey, btn.dataset.sstitle);
+}
+
+function openSS(key, howtoTitle) {
+  ssSlides = HOWTO_SLIDES[key] || [];
+  if (!ssSlides.length) return;
+  document.getElementById('ssEyebrow').textContent = 'Step-by-Step Walkthrough';
+  document.getElementById('ssModalTitle').textContent = 'How to ' + howtoTitle;
+  // Build sidenav
+  const nav = document.getElementById('ssSideNav');
+  nav.innerHTML = '';
+  const dots = document.getElementById('ssDots');
+  dots.innerHTML = '';
+  ssSlides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'ss-step-btn';
+    b.innerHTML = `<div class="ss-snum">${i+1}</div><div class="ss-slabel">${s.title}</div>`;
+    b.onclick = () => ssRender(i, true);
+    nav.appendChild(b);
+    const d = document.createElement('button');
+    d.className = 'ss-dot';
+    d.onclick = () => ssRender(i, true);
+    dots.appendChild(d);
+  });
+  document.getElementById('ssOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  ssRender(0);
+}
+
+function closeSS(e) {
+  if (e && e.target !== document.getElementById('ssOverlay') && !e.target.closest('.ss-close')) return;
+  document.getElementById('ssOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function ssRender(i, fade=false) {
+  ssCur = i;
+  const s = ssSlides[i], n = ssSlides.length;
+  const img = document.getElementById('ssImg');
+  if (fade) { img.classList.add('ss-fade'); setTimeout(() => { img.src = s.img; img.classList.remove('ss-fade'); }, 150); }
+  else img.src = s.img;
+  document.getElementById('ssBadge').textContent = s.step + ' of ' + n;
+  document.getElementById('ssProg').style.width = ((i+1)/n*100) + '%';
+  document.getElementById('ssCtr').textContent = (i+1) + ' / ' + n;
+  document.getElementById('ssDStep').textContent = s.step;
+  document.getElementById('ssDTitle').textContent = s.title;
+  document.getElementById('ssDText').textContent = s.desc;
+  document.getElementById('ssPrev').disabled = i === 0;
+  const nb = document.getElementById('ssNext');
+  if (i === n-1) { nb.textContent = '✓ Done'; nb.onclick = null; }
+  else { nb.innerHTML = 'Next<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="9 18 15 12 9 6"/></svg>'; nb.onclick = () => ssGo(1); }
+  document.querySelectorAll('.ss-step-btn').forEach((b,j) => { b.classList.toggle('ss-active',j===i); b.classList.toggle('ss-done',j<i); });
+  document.querySelectorAll('.ss-dot').forEach((d,j) => { d.classList.toggle('ss-active',j===i); d.classList.toggle('ss-done',j<i); });
+}
+
+function ssGo(d) { const n = ssCur+d; if(n>=0&&n<ssSlides.length) ssRender(n,true); }
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('ssOverlay').classList.contains('open')) return;
+  if (e.key==='ArrowRight') ssGo(1);
+  if (e.key==='ArrowLeft') ssGo(-1);
+  if (e.key==='Escape') { document.getElementById('ssOverlay').classList.remove('open'); document.body.style.overflow=''; }
+});
+
+switchRole('admin');
+selectSection(0);
+
+// LEAD PREP & ORDER WALKTHROUGHS ADDED
+
+</script>
+<!-- SLIDESHOW MODAL -->
+<div class="ss-overlay" id="ssOverlay" onclick="closeSS(event)">
+  <div class="ss-modal" onclick="event.stopPropagation()">
+    <div class="ss-header">
+      <div class="ss-header-left">
+        <div class="ss-eyebrow" id="ssEyebrow">How to</div>
+        <div class="ss-title" id="ssModalTitle"></div>
+      </div>
+      <button class="ss-close" onclick="closeSS()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="ss-body">
+      <div class="ss-sidenav" id="ssSideNav"></div>
+      <div class="ss-viewer">
+        <div class="ss-imgwrap">
+          <div class="ss-badge" id="ssBadge"></div>
+          <img class="ss-img" id="ssImg" src="" alt="">
+        </div>
+        <div class="ss-controls">
+          <button class="ss-cbtn" id="ssPrev" onclick="ssGo(-1)" disabled>
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Prev
+          </button>
+          <div class="ss-prog"><div class="ss-progbar" id="ssProg"></div></div>
+          <span class="ss-ctr" id="ssCtr"></span>
+          <div class="ss-dots" id="ssDots"></div>
+          <button class="ss-cbtn ss-gold" id="ssNext" onclick="ssGo(1)">
+            Next<svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+        <div class="ss-desc">
+          <div class="ss-dstep" id="ssDStep"></div>
+          <div class="ss-dtitle" id="ssDTitle"></div>
+          <div class="ss-dtext" id="ssDText"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</body>
+</html>

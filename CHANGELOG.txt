@@ -1,0 +1,7 @@
+SOPros Master Operator Guide
+Updated: 2026-07-20 03:52 AM America/New_York
+
+Changes in this version:
+- Added the video to Admin > Planner > Add Notes to a Recurring Shift Checklist.
+- Added the video to Admin > Planner > Activate or Deactivate a Recurring Shift Checklist.
+- Preserved all existing screenshots, videos, and walkthrough sections from the supplied master ZIP.
